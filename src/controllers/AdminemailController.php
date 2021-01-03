@@ -4,9 +4,11 @@ namespace VitesseCms\Communication\Controllers;
 
 use VitesseCms\Admin\AbstractAdminController;
 use VitesseCms\Communication\Forms\EmailForm;
+use VitesseCms\Communication\Interfaces\RepositoriesInterface;
+use VitesseCms\Communication\Interfaces\RepositoryInterface;
 use VitesseCms\Communication\Models\Email;
 
-class AdminemailController extends AbstractAdminController
+class AdminemailController extends AbstractAdminController implements RepositoriesInterface
 {
     /**
      * @var array
@@ -21,20 +23,19 @@ class AdminemailController extends AbstractAdminController
         $this->classForm = EmailForm::class;
         $this->listOrder = 'subject';
         $this->listTemplate = 'listNewsletterQueue';
-        $this->listTemplatePath = $this->configuration->getRootDir() . 'src/communication/resources/views/admin/';
+        $this->listTemplatePath = $this->configuration->getVendorNameDir() . 'communication/src/resources/views/admin/';
     }
 
     public function sendPreviewAction(string $id): void
     {
         if($this->user->getId()) :
-            Email::setFindPublished(false);
-            $email = Email::findById($id);
+            $email = $this->repositories->email->getById($id);
             $this->mailer->sendMail(
-                $this->user->_('email'),
-                $email->_('subject'),
-                $email->_('body')
+                $this->user->getEmail(),
+                $email->getSubjectField(),
+                $email->getBodyField()
             );
-            $this->flash->_('Preview email is send to '. $this->user->_('email'));
+            $this->flash->setSucces('Preview email is send to '. $this->user->_('email'));
         endif;
 
         $this->redirect();

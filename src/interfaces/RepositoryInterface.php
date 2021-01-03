@@ -3,6 +3,7 @@
 namespace VitesseCms\Communication\Interfaces;
 
 use VitesseCms\Block\Repositories\BlockFormBuilderRepository;
+use VitesseCms\Communication\Repositories\EmailRepository;
 use VitesseCms\Communication\Repositories\NewsletterListRepository;
 use VitesseCms\Communication\Repositories\NewsletterQueueRepository;
 use VitesseCms\Communication\Repositories\NewsletterRepository;
@@ -19,6 +20,7 @@ use VitesseCms\Language\Repositories\LanguageRepository;
  * @property NewsletterRepository $newsletter
  * @property NewsletterListRepository $newsletterList
  * @property NewsletterQueueRepository $newsletterQueue
+ * @property EmailRepository $email
  */
 interface RepositoryInterface
 {

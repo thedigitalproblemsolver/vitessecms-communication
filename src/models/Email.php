@@ -10,4 +10,14 @@ class Email extends AbstractCollection
     {
         return $this->_('subject');
     }
+
+    public function getSubjectField(): string
+    {
+        return $this->_('subject');
+    }
+
+    public function getBodyField(): string
+    {
+        return $this->_('body');
+    }
 }

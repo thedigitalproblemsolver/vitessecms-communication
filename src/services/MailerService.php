@@ -78,8 +78,10 @@ class MailerService extends Manager
         $mailMessage = $this->createMessage()
             ->to($toAddress)
             ->subject($this->prepareString($subject))
-            ->content($this->parseBody($body, $emailType))
-            ->bcc($this->setting->get('WEBSITE_CATCHALL_EMAIL'));
+            ->content($this->parseBody($body, $emailType));
+        if($this->setting->has('WEBSITE_CATCHALL_EMAIL')) :
+            $mailMessage->bcc($this->setting->get('WEBSITE_CATCHALL_EMAIL'));
+        endif;
 
         if ($replyTo) :
             $mailMessage->replyTo($replyTo);

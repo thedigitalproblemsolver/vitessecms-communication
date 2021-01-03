@@ -4,6 +4,7 @@ namespace VitesseCms\Communication\Forms;
 
 use VitesseCms\Core\Utils\DirectoryUtil;
 use VitesseCms\Core\Utils\FileUtil;
+use VitesseCms\Core\Utils\SystemUtil;
 use VitesseCms\Form\AbstractForm;
 use VitesseCms\Form\Helpers\ElementHelper;
 use VitesseCms\Form\Models\Attributes;
@@ -14,7 +15,7 @@ class EmailForm extends AbstractForm
     public function initialize():void
     {
         $options = [];
-        $modules = DirectoryUtil::getChildren($this->configuration->getRootDir() . 'src');
+        $modules = SystemUtil::getModules($this->configuration);
         foreach ($modules as $moduleName => $modulePath) :
             $controllers = DirectoryUtil::getFilelist($modulePath . '/controllers');
             foreach ($controllers as $controllerPath => $controllerName) :
@@ -23,7 +24,7 @@ class EmailForm extends AbstractForm
                     '',
                     $controllerName
                 );
-                $functions = FileUtil::getFunctions($controllerPath);
+                $functions = FileUtil::getFunctions($controllerPath, $this->configuration);
                 foreach ($functions as $function) :
                     $function = str_replace('Action','',$function);
                     $options[strtolower($moduleName.$controllerName.$function)] = $moduleName.' - '.$controllerName.' - '.$function;
