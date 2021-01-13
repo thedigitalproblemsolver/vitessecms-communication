@@ -1,12 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace VitesseCms\Communication\Factories;
 
 use VitesseCms\Communication\Models\Email;
 
-/**
- * Class EmailFactory
- */
 class EmailFactory
 {
     /**

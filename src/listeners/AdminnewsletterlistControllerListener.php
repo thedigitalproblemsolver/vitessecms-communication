@@ -8,11 +8,18 @@ use Phalcon\Events\Event;
 
 class AdminnewsletterlistControllerListener
 {
-    public function beforeEdit(
-        Event $event,
-        AdminnewsletterlistController $controller,
-        NewsletterList $newsletterList
-    ): void {
+    public function beforeModelSave(Event $event, AdminnewsletterlistController $controller, NewsletterList $newsletterList): void {
+        if ($controller->request->get('addEmail')) :
+            $newsletterList->addMember($controller->request->get('addEmail'));
+            $controller->log->write(
+                $newsletterList->getId(),
+                NewsletterList::class,
+                'Added '.$controller->request->get('addEmail').' to '.$newsletterList->getNameField().' by admin'
+            );
+            $_POST['addEmail'] = null;
+        endif;
+    }
+    public function beforeEdit(Event $event, AdminnewsletterlistController $controller, NewsletterList $newsletterList): void {
         $rows = [];
         foreach ($newsletterList->getMembers() as $key => $member) :
             $member['key'] = $key;
@@ -29,10 +36,10 @@ class AdminnewsletterlistControllerListener
             $controller->router->getModuleName() .
             '/' . $controller->router->getControllerName()
         ;
-
+;
         $dataHtml = $controller->view->renderTemplate(
             'adminNewsletterListMembers',
-            $controller->configuration->getRootDir().'src/communication/resources/views/admin/',
+            $controller->configuration->getVendorNameDir().'communication/src/resources/views/admin/',
             [
                 'baseLink' => $link,
                 'baseId' => (string)$newsletterList->getId(),
@@ -40,6 +47,6 @@ class AdminnewsletterlistControllerListener
             ]
         );
 
-        $newsletterList->set('dataHtml', $dataHtml);
+        $newsletterList->setDataHtml($dataHtml);
     }
 }

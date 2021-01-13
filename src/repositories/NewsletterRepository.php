@@ -4,6 +4,8 @@ namespace VitesseCms\Communication\Repositories;
 
 use VitesseCms\Communication\Models\Newsletter;
 use VitesseCms\Communication\Models\NewsletterIterator;
+use VitesseCms\Core\Interfaces\ArrayIteratorInterface;
+use VitesseCms\Database\Interfaces\FindAllInterface;
 use VitesseCms\Database\Models\FindValueIterator;
 
 class NewsletterRepository
@@ -21,10 +23,7 @@ class NewsletterRepository
         return null;
     }
 
-    public function findAll(
-        ?FindValueIterator $findValues = null,
-        bool $hideUnpublished = true
-    ): NewsletterIterator {
+    public function findAll(?FindValueIterator $findValues = null, bool $hideUnpublished = true): NewsletterIterator {
         Newsletter::setFindPublished($hideUnpublished);
         Newsletter::addFindOrder('name');
         $this->parsefindValues($findValues);

@@ -1,61 +1,43 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace VitesseCms\Communication\Forms;
 
 use VitesseCms\Communication\Models\NewsletterList;
+use VitesseCms\Communication\Repositories\RepositoryCollection;
 use VitesseCms\Form\AbstractForm;
+use VitesseCms\Form\AbstractFormWithRepository;
 use VitesseCms\Form\Helpers\ElementHelper;
+use VitesseCms\Form\Interfaces\FormWithRepositoryInterface;
+use VitesseCms\Form\Models\Attributes;
 use VitesseCms\Language\Models\Language;
 use VitesseCms\User\Models\User;
 
-/**
- * Class NewsletterListForm
- */
-class NewsletterListForm extends AbstractForm
+class NewsletterListForm extends AbstractFormWithRepository
 {
+    /**
+     * @var RepositoryCollection
+     */
+    protected $repositories;
 
     /**
-     * initialize
-     *
-     * @param NewsletterList|null $item
+     * @var NewsletterList
      */
-    public function initialize(NewsletterList $item = null)
+    protected $_entity;
+
+    public function buildForm(): FormWithRepositoryInterface
     {
-        $this->_(
-            'text',
-            '%CORE_NAME%',
-            'name',
-            ['required'  => 'required']
-        );
+        $this->addText('%CORE_NAME%', 'name', (new Attributes())->setRequired(true))
+            ->addDropdown(
+                '%ADMIN_LANGUAGE%',
+                'language',
+                (new Attributes())->setRequired(true)
+                    ->setOptions(
+                        ElementHelper::modelIteratorToOptions($this->repositories->language->findAll())))
+            ->addEmail('%CORE_EMAIL%', 'addEmail')
+            ->addHtml($this->_entity->getDataHtml()??'')
+            ->addSubmitButton('submit', '%CORE_SAVE%')
+        ;
 
-        $this->_(
-            'select',
-            '%ADMIN_LANGUAGE%',
-            'language',
-            [
-                'required'  => 'required',
-                'options' => ElementHelper::arrayToSelectOptions(Language::findAll())
-            ]
-        );
-
-        $this->_(
-            'email',
-            '%CORE_EMAIL%',
-            'addEmail'
-        );
-
-        $this->_(
-            'html',
-            'dataHtml',
-            null,
-            [
-                'html' => $item->_('dataHtml')
-            ]
-        );
-
-        $this->_(
-            'submit',
-            '%CORE_SAVE%'
-        );
+        return $this;
     }
 }

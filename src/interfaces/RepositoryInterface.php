@@ -8,6 +8,7 @@ use VitesseCms\Communication\Repositories\NewsletterListRepository;
 use VitesseCms\Communication\Repositories\NewsletterQueueRepository;
 use VitesseCms\Communication\Repositories\NewsletterRepository;
 use VitesseCms\Communication\Repositories\NewsletterTemplateRepository;
+use VitesseCms\Content\Repositories\ItemRepository;
 use VitesseCms\Core\Repositories\DatagroupRepository;
 use VitesseCms\Language\Repositories\LanguageRepository;
 
@@ -21,6 +22,7 @@ use VitesseCms\Language\Repositories\LanguageRepository;
  * @property NewsletterListRepository $newsletterList
  * @property NewsletterQueueRepository $newsletterQueue
  * @property EmailRepository $email
+ * @property ItemRepository $item
  */
 interface RepositoryInterface
 {

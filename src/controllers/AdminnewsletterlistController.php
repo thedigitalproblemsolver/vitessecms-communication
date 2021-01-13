@@ -5,12 +5,20 @@ namespace VitesseCms\Communication\Controllers;
 use VitesseCms\Communication\Forms\NewsletterListForm;
 use VitesseCms\Communication\Forms\NewsletterListImportForm;
 use VitesseCms\Communication\Helpers\ExportHelper;
+use VitesseCms\Communication\Interfaces\RepositoriesInterface;
+use VitesseCms\Communication\Interfaces\RepositoryInterface;
 use VitesseCms\Communication\Models\NewsletterList;
 use VitesseCms\Admin\AbstractAdminController;
+use VitesseCms\Communication\Repositories\RepositoryCollection;
+use VitesseCms\Core\Repositories\DatafieldRepository;
+use VitesseCms\Core\Repositories\DatagroupRepository;
 use VitesseCms\Database\AbstractCollection;
 use VitesseCms\Core\Utils\FileUtil;
+use VitesseCms\Export\Repositories\ExportTypeRepository;
+use VitesseCms\Export\Repositories\ItemRepository;
+use VitesseCms\Language\Repositories\LanguageRepository;
 
-class AdminnewsletterlistController extends AbstractAdminController
+class AdminnewsletterlistController extends AbstractAdminController implements RepositoriesInterface
 {
     public function onConstruct()
     {
@@ -22,12 +30,13 @@ class AdminnewsletterlistController extends AbstractAdminController
 
     public function importFormAction(string $newsletterListId): void
     {
-        $form = new NewsletterListImportForm(NewsletterList::findById($newsletterListId));
+        $form = new NewsletterListImportForm();
+        $form->setEntity($this->repositories->newsletterList->getById($newsletterListId));
+        $form->setRepositories($this->repositories);
+        $form->buildForm();
         $this->view->setVar(
             'content',
-            $form->renderForm(
-            'admin/communication/adminnewsletterlist/parseimportform/'
-            )
+            $form->renderForm('admin/communication/adminnewsletterlist/parseimportform/')
         );
 
         $this->prepareView();
@@ -35,8 +44,15 @@ class AdminnewsletterlistController extends AbstractAdminController
 
     public function exportAction(string $newsletterListId): void
     {
-        $exportHelper = new ExportHelper($this->setting);
-        $exportHelper->setItems([NewsletterList::findById($newsletterListId)]);
+        $exportHelper = new ExportHelper($this->configuration->getLanguage(), new \VitesseCms\Export\Repositories\RepositoryCollection(
+            new ExportTypeRepository(),
+            new ItemRepository(),
+            new LanguageRepository(),
+            new DatagroupRepository(),
+            new DatafieldRepository()
+        ));
+        $exportHelper->setItems([$this->repositories->newsletterList->getById($newsletterListId)]);
+        $exportHelper->setFields(['members', 'subscribed', 'GdprEmail']);
         $exportHelper->setHeaders();
         $exportHelper->createOutput();
         $this->view->disable();
@@ -49,16 +65,15 @@ class AdminnewsletterlistController extends AbstractAdminController
                 $name = FileUtil::sanatize($file->getName());
                 if ($file->moveTo($this->config->get('uploadDir') . $name)) :
                     if (($handle = fopen($this->config->get('uploadDir') . $name, 'rb')) !== false) :
-                        /** @var NewsletterList $newsletterList */
-                        $newsletterList = NewsletterList::findById($this->request->get('newsletterlist'));
+                        $newsletterList = $this->repositories->newsletterList->getById($this->request->get('newsletterlist'));
                         while (($data = fgetcsv($handle, 1000, ',')) !== false) :
                             $newsletterList->addMember($data[0]);
                         endwhile;
                         $newsletterList->save();
                     endif;
-                    $this->flash->_('ADMIN_FILE_UPLOAD_SUCCESS', 'success', [$file->getName()]);
+                    $this->flash->setSucces('ADMIN_FILE_UPLOAD_SUCCESS', [$file->getName()]);
                 else :
-                    $this->flash->_('ADMIN_FILE_UPLOAD_FAILED', 'error', [$file->getName()]);
+                    $this->flash->setError('ADMIN_FILE_UPLOAD_FAILED', [$file->getName()]);
                 endif;
             endforeach;
 
@@ -75,12 +90,12 @@ class AdminnewsletterlistController extends AbstractAdminController
     public function deleteMemberAction(string $id, int $key): void
     {
         if($id && is_numeric($key)) :
-            NewsletterList::setFindPublished(false);
-            $newsletterList = NewsletterList::findById($id);
-            $members = $newsletterList->_('members');
+            $newsletterList = $this->repositories->newsletterList->getById($id, false);
+            $members = $newsletterList->getMembers();
             if(isset($members[$key])) :
                 $newsletterList->removeMember($members[$key]['email'])->save();
             endif;
+            $this->flash->setSucces('Member is removed');
         endif;
 
         $this->redirect();
@@ -89,14 +104,14 @@ class AdminnewsletterlistController extends AbstractAdminController
     public function unsubscribeMemberAction(string $id, int $key): void
     {
         if($id && is_numeric($key)) :
-            NewsletterList::setFindPublished(false);
-            /** @var NewsletterList $newsletterList */
-            $newsletterList = NewsletterList::findById($id);
-            $members = $newsletterList->_('members');
+            $newsletterList = $this->repositories->newsletterList->getById($id, false);
+            $members = $newsletterList->getMembers();
             if(isset($members[$key])) :
                 $newsletterList = $newsletterList->unsubscribeMember($members[$key]['email']);
             endif;
             $newsletterList->save();
+            $this->flash->setSucces('Member is unsubscribed');
+
         endif;
 
         $this->redirect();
@@ -105,30 +120,16 @@ class AdminnewsletterlistController extends AbstractAdminController
     public function subscribeMemberAction(string $id, int $key): void
     {
         if($id && is_numeric($key)) :
-            NewsletterList::setFindPublished(false);
-            /** @var NewsletterList $newsletterList */
-            $newsletterList = NewsletterList::findById($id);
-            $members = $newsletterList->_('members');
+            $newsletterList = $this->repositories->newsletterList->getById($id, false);
+            $members = $newsletterList->getMembers();
             if(isset($members[$key])) :
                 $newsletterList = $newsletterList->subscribeMember($members[$key]['email']);
             endif;
             $newsletterList->save();
+            $this->flash->setSucces('Member is subscribed');
+
         endif;
 
         $this->redirect();
-    }
-
-    public function beforeSave(AbstractCollection $item)
-    {
-        if ($this->request->get('addEmail')) :
-            /** @var NewsletterList $item */
-            $item->addMember($this->request->get('addEmail'));
-            $this->log->write(
-                $item->getId(),
-                NewsletterList::class,
-                'Added '.$this->request->get('addEmail').' to '.$item->_('name').' by admin'
-            );
-            $_POST['addEmail'] = null;
-        endif;
     }
 }

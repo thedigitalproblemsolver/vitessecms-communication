@@ -4,11 +4,13 @@ namespace VitesseCms\Communication\Repositories;
 
 use VitesseCms\Block\Repositories\BlockFormBuilderRepository;
 use VitesseCms\Communication\Interfaces\RepositoryInterface;
+use VitesseCms\Content\Repositories\ItemRepository;
 use VitesseCms\Core\Interfaces\RepositoryCollectionInterface;
 use VitesseCms\Core\Repositories\DatagroupRepository;
+use VitesseCms\Database\Interfaces\BaseRepositoriesInterface;
 use VitesseCms\Language\Repositories\LanguageRepository;
 
-class RepositoryCollection implements RepositoryInterface, RepositoryCollectionInterface
+class RepositoryCollection implements RepositoryInterface, RepositoryCollectionInterface, BaseRepositoriesInterface
 {
     /**
      * @var NewsletterTemplateRepository
@@ -50,6 +52,11 @@ class RepositoryCollection implements RepositoryInterface, RepositoryCollectionI
      */
     public $email;
 
+    /**
+     * @var ItemRepository
+     */
+    public $item;
+
     public function __construct(
         NewsletterTemplateRepository $newsletterTemplateRepository,
         BlockFormBuilderRepository $blockFormBuilderRepository,
@@ -58,7 +65,8 @@ class RepositoryCollection implements RepositoryInterface, RepositoryCollectionI
         NewsletterRepository $newsletterRepository,
         NewsletterListRepository $newsletterListRepository,
         NewsletterQueueRepository $newsletterQueueRepository,
-        EmailRepository $emailRepository
+        EmailRepository $emailRepository,
+        ItemRepository $itemRepository
     ) {
         $this->newsletterTemplate = $newsletterTemplateRepository;
         $this->blockFormBuilder = $blockFormBuilderRepository;
@@ -68,5 +76,6 @@ class RepositoryCollection implements RepositoryInterface, RepositoryCollectionI
         $this->newsletterList = $newsletterListRepository;
         $this->newsletterQueue = $newsletterQueueRepository;
         $this->email = $emailRepository;
+        $this->item = $itemRepository;
     }
 }

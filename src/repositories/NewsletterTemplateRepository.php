@@ -3,6 +3,8 @@
 namespace VitesseCms\Communication\Repositories;
 
 use VitesseCms\Communication\Models\NewsletterTemplate;
+use VitesseCms\Communication\Models\NewsletterTemplateIterator;
+use VitesseCms\Database\Models\FindValueIterator;
 
 class NewsletterTemplateRepository
 {
@@ -17,5 +19,29 @@ class NewsletterTemplateRepository
         endif;
 
         return null;
+    }
+
+    public function findAll(?FindValueIterator $findValues = null, bool $hideUnpublished = true): NewsletterTemplateIterator
+    {
+        NewsletterTemplate::setFindPublished($hideUnpublished);
+        NewsletterTemplate::addFindOrder('name');
+        $this->parsefindValues($findValues);
+
+        return new NewsletterTemplateIterator(NewsletterTemplate::findAll());
+    }
+
+    protected function parsefindValues(?FindValueIterator $findValues = null): void
+    {
+        if ($findValues !== null) :
+            while ($findValues->valid()) :
+                $findValue = $findValues->current();
+                NewsletterTemplate::setFindValue(
+                    $findValue->getKey(),
+                    $findValue->getValue(),
+                    $findValue->getType()
+                );
+                $findValues->next();
+            endwhile;
+        endif;
     }
 }

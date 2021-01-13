@@ -53,7 +53,7 @@ class NewsletterlistController extends AbstractController implements Repositorie
             $newsletterList = $this->repositories->newsletterList->getById($newsletterListId);
             if($newsletterList !== null ):
                 $newsletterList->unsubscribeMember($this->user->_('email'))->save();
-                $this->flash->_('NEWSLETTER_UNSUBSCRIBE_SUCCESS','success',[$newsletterList->_('name')]);
+                $this->flash->setSucces('NEWSLETTER_UNSUBSCRIBE_SUCCESS','success',[$newsletterList->_('name')]);
             endif;
         endif;
 
@@ -66,7 +66,7 @@ class NewsletterlistController extends AbstractController implements Repositorie
             $newsletterList = $this->repositories->newsletterList->getById($newsletterListId);
             if($newsletterList !== null) :
                 $newsletterList->subscribeMember($this->user->_('email'))->save();
-                $this->flash->_('NEWSLETTER_SUBSCRIBE_SUCCESS','success',[$newsletterList->_('name')]);
+                $this->flash->setSucces('NEWSLETTER_SUBSCRIBE_SUCCESS','success',[$newsletterList->_('name')]);
             endif;
         endif;
 

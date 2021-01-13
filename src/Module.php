@@ -10,6 +10,7 @@ use VitesseCms\Communication\Repositories\NewsletterQueueRepository;
 use VitesseCms\Communication\Repositories\NewsletterRepository;
 use VitesseCms\Communication\Repositories\NewsletterTemplateRepository;
 use VitesseCms\Communication\Repositories\RepositoryCollection;
+use VitesseCms\Content\Repositories\ItemRepository;
 use VitesseCms\Core\AbstractModule;
 use VitesseCms\Core\Interfaces\RepositoryCollectionInterface;
 use VitesseCms\Core\Repositories\DatagroupRepository;
@@ -34,7 +35,8 @@ class Module extends AbstractModule
             new NewsletterRepository(),
             new NewsletterListRepository(),
             new NewsletterQueueRepository(),
-            new EmailRepository()
+            new EmailRepository(),
+            new ItemRepository()
         );
     }
 }

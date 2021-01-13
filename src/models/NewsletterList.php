@@ -15,9 +15,36 @@ class NewsletterList extends AbstractCollection
      */
     public $members;
 
+    /**
+     * @var string
+     */
+    protected $dataHtml;
+
+    /**
+     * @var string
+     */
+    protected $addEmail;
+
     public function onConstruct()
     {
         $this->members = [];
+    }
+
+    public function setDataHtml(string $dataHtml): NewsletterList
+    {
+        $this->dataHtml = $dataHtml;
+
+        return $this;
+    }
+
+    public function getDataHtml(): ?string
+    {
+        return $this->dataHtml;
+    }
+
+    public function getAddEmail(): string
+    {
+        return '';
     }
 
     public function addMember(string $email): NewsletterList

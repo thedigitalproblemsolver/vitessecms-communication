@@ -1,287 +1,180 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace VitesseCms\Communication\Forms;
 
 use VitesseCms\Block\Utils\BlockUtil;
+use VitesseCms\Communication\Interfaces\RepositoriesInterface;
+use VitesseCms\Communication\Interfaces\RepositoryInterface;
 use VitesseCms\Communication\Models\Newsletter;
 use VitesseCms\Communication\Models\NewsletterList;
 use VitesseCms\Communication\Models\NewsletterTemplate;
 use VitesseCms\Content\Models\Item;
 use VitesseCms\Core\Helpers\ItemHelper;
 use VitesseCms\Core\Utils\SystemUtil;
+use VitesseCms\Database\Models\FindValue;
+use VitesseCms\Database\Models\FindValueIterator;
 use VitesseCms\Form\AbstractForm;
+use VitesseCms\Form\AbstractFormWithRepository;
 use VitesseCms\Form\Helpers\ElementHelper;
+use VitesseCms\Form\Interfaces\FormWithRepositoryInterface;
+use VitesseCms\Form\Models\Attributes;
 use VitesseCms\Language\Models\Language;
 
-/**
- * Class NewsletterForm
- */
-class NewsletterForm extends AbstractForm
+class NewsletterForm extends AbstractFormWithRepository
 {
+    /**
+     * @var RepositoryInterface
+     */
+    protected $repositories;
 
     /**
-     * initialize
-     *
-     * @param Newsletter|null $item
+     * @var Newsletter
      */
-    public function initialize(?Newsletter $item = null): void
+    protected $item;
+
+    public function buildForm(): FormWithRepositoryInterface
     {
-        if ($item === null || empty($item->_('parentId'))) {
-            $this->buildParentForm($item);
+        if ($this->item === null || $this->item->getParentId() === null) {
+            $this->buildParentForm();
         } else {
-            $this->buildChildForm($item);
+            $this->buildChildForm();
         }
         if ($this->request->get('parentId', null)) :
-            $this->_(
-                'hidden',
-                null,
-                'parentId',
-                [
-                    'value' => $this->request->get('parentId'),
-                ]
-            );
+            $this->addHidden('parentId', $this->request->get('parentId'));
         endif;
+
+        return $this;
     }
 
-    /**
-     * @param Newsletter|null $item
-     */
-    protected function buildParentForm(?Newsletter $item = null): void
+    public function setEntity($entity)
+    {
+        parent::setEntity($entity);
+        $this->item = $entity;
+    }
+
+    protected function buildParentForm(): void
     {
         $showSendNewsletterList = false;
 
-        $this->_(
-            'text',
-            '%CORE_NAME%',
-            'name',
-            ['required' => 'required']
-        )->_(
-            'select',
-            '%ADMIN_LANGUAGE%',
-            'language',
-            [
-                'required' => 'required',
-                'options'  => ElementHelper::arrayToSelectOptions(Language::findAll()),
-            ]
-        );
+        $this->addText('%CORE_NAME%', 'name', (new Attributes())->setRequired(true))
+            ->addDropdown(
+                '%ADMIN_LANGUAGE%',
+                'language',
+                (new Attributes())->setRequired(true)
+                    ->setOptions(ElementHelper::modelIteratorToOptions($this->repositories->language->findAll())
+                    ));
 
-        if ($item->_('language')) :
-            NewsletterList::setFindValue('language', $item->_('language'));
-            $this->_(
-                'select',
+        if ($this->item->getLanguage() !== null) :
+            $newsletters = $this->repositories->newsletterList->findAll(
+                new FindValueIterator([new FindValue('language', $this->item->getLanguage())])
+            );
+            $this->addDropdown(
                 'Newsletter list',
                 'list',
-                [
-                    'options' => ElementHelper::arrayToSelectOptions(NewsletterList::findAll()),
-                ]
+                (new Attributes())->setOptions(ElementHelper::modelIteratorToOptions($newsletters))
             );
-            if (!$item->_('hasChildren')) :
-                $this->setBodyText($item);
+            if (!$this->item->hasChildren) :
+                $this->setBodyText();
             endif;
             $showSendNewsletterList = true;
         endif;
 
-        $this->_(
-            'checkbox',
-            'Start sending after subscribtion',
-            'sendAfterSubscribtion'
-        )->_(
-            'submit',
-            '%CORE_SAVE%'
-        )->_(
-            'html',
-            '',
-            '',
-            [
-                'html' => '<span id="newsletterId" style="display:none">' . $item->getId() . '</span>',
-            ]
-        );
+        $this->addToggle('Start sending after subscribtion', 'sendAfterSubscribtion')
+            ->addSubmitButton('%CORE_SAVE%')
+            ->addHtml('<span id="newsletterId" style="display:none">' . $this->item->getId() . '</span>');
 
         if ($showSendNewsletterList) :
-            if (!$item->_('hasChildren')) :
-                $this->_(
-                    'text',
-                    'Senddate',
-                    'sendDate',
-                    ['inputType' => 'date']
-                )->_(
-                    'text',
-                    'Sendtime',
-                    'sendTime',
-                    ['inputType' => 'time']
-                );
+            if (!$this->item->hasChildren()) :
+                $this->addDate('Senddate', 'sendDate')
+                    ->addDate('Sendtime', 'sendTime');
             endif;
-            if ($item->_('published')) :
-                $this->_(
-                    'button',
-                    'Place newsletter in  queue',
-                    'queueNewsletter'
-                );
+            if ($this->item->isPublished()) :
+                $this->addButton('Place newsletter in  queue', 'queueNewsletter');
             endif;
         endif;
     }
 
-    /**
-     * @param Newsletter|null $item
-     */
-    protected function buildChildForm(?Newsletter $item = null): void
+    protected function buildChildForm(): void
     {
-        Newsletter::setFindPublished(false);
-        $parentNewsletter = Newsletter::findById($item->_('parentId'));
-        $item->set('language', $parentNewsletter->_('language'));
-        $item->set('list', $parentNewsletter->_('list'));
+        $parentNewsletter = $this->repositories->newsletter->getById($this->item->getParentId());
+        $this->item->setLanguage($parentNewsletter->getLanguage());
+        $this->item->set('list', $parentNewsletter->_('list'));
 
-        $this->_(
-            'text',
-            '%CORE_NAME%',
-            'name',
-            ['required' => 'required']
-        )->_(
-            'hidden',
-            '',
-            'language',
-            ['value' => $parentNewsletter->_('language')]
-        )->_(
-            'hidden',
-            '',
-            'list',
-            ['value' => $parentNewsletter->_('list')]
-        );
+        $this->addText('%CORE_NAME%', 'name', (new Attributes())->setRequired(true))
+            ->addHidden('language', $parentNewsletter->getLanguage())
+            ->addHidden('list', $parentNewsletter->getList());
 
-        if ($item !== null && $item->_('language')) :
-            $this->setBodyText($item);
+        if ($this->item !== null && $this->item->getLanguage() !== null) :
+            $this->setBodyText();
         endif;
 
-        $this->_(
-            'number',
-            'days after previous mail',
-            'days'
-        )->_(
-            'text',
-            'Sendtime',
-            'sendTime',
-            ['inputType' => 'time']
-        );
-
-        $this->_(
-            'submit',
-            '%CORE_SAVE%'
-        )->_(
-            'html',
-            '',
-            '',
-            [
-                'html' => '<span id="newsletterId" style="display:none">' . $item->getId() . '</span>',
-            ]
-        );
+        $this->addNumber('days after previous mail', 'days')
+            ->addTime('Sendtime', 'sendTime')
+            ->addSubmitButton('%CORE_SAVE%')
+            ->addHtml('<span id="newsletterId" style="display:none">' . $this->item->getId() . '</span>');
     }
 
-    /**
-     * @param Newsletter $item
-     */
-    protected function setBodyText(Newsletter $item): void
+    protected function setBodyText(): void
     {
-        NewsletterTemplate::setFindValue('language', $item->_('language'));
-        $this->_(
-            'select',
+        $newsletterTemplates = $this->repositories->newsletterTemplate->findAll(
+            new FindValueIterator([new FindValue('language', $this->item->getLanguage())])
+        );
+        $this->addDropdown(
             '%ADMIN_CHOOSE_A_TEMPLATE%',
             'template',
-            [
-                'options' => ElementHelper::arrayToSelectOptions(NewsletterTemplate::findAll()),
-            ]
+            (new Attributes())->setOptions(ElementHelper::modelIteratorToOptions($newsletterTemplates))
         );
         $files = BlockUtil::getTemplateFiles('../emails', $this->configuration);
+
         $options = [];
         foreach ($files as $key => $label) :
             $selected = false;
-            if ($item->_('emailType') === $key) :
+            if ($this->item->getEmailType() === $key) :
                 $selected = true;
             endif;
             $options[] = [
-                'value'    => $key,
-                'label'    => $label,
+                'value' => $key,
+                'label' => $label,
                 'selected' => $selected,
             ];
         endforeach;
-        $this->_(
-            'select',
+        $this->addDropdown(
             'Email type',
             'emailType',
-            [
-                'required' => 'required',
-                'options'  => $options,
-            ]
-        )->_(
-            'text',
-            'Subject',
-            'subject',
-            ['required' => 'required']
-        )->_(
-            'text',
-            'Motto',
-            'motto',
-            ['required' => 'required']
-        );
+            (new Attributes())->setRequired(true)->setOptions($options)
+        )->addText('Subject', 'subject', (new Attributes())->setRequired(true))
+            ->addText('Motto', 'motto', (new Attributes())->setRequired(true));
 
-        if ($item->_('template')) :
-            $options = [
-                [
-                    'value'    => '',
-                    'label'    => '%ADMIN_TYPE_TO_SEARCH%',
-                    'selected' => false,
-                ],
-            ];
+        if ($this->item->getTemplate() !== null) :
+            $options = [[
+                'value' => '',
+                'label' => '%ADMIN_TYPE_TO_SEARCH%',
+                'selected' => false,
+            ]];
 
-            if ($item->_('emailHeaderTargetPage')) :
-                /** @var Item $selectedItem */
-                $selectedItem = Item::findById($item->_('emailHeaderTargetPage'));
+            if (!empty($this->item->getEmailHeaderTargetPage())) :
+                $selectedItem = $this->repositories->item->getById($this->item->getEmailHeaderTargetPage());
                 $itemPath = ItemHelper::getPathFromRoot($selectedItem);
                 $options[] = [
-                    'value'    => (string)$selectedItem->getId(),
-                    'label'    => implode(' - ', $itemPath),
+                    'value' => (string)$selectedItem->getId(),
+                    'label' => implode(' - ', $itemPath),
                     'selected' => true,
 
                 ];
             endif;
 
-            $this->_(
-                'textarea',
-                'Body',
-                'body',
-                [
-                    'required'   => 'required',
-                    'inputClass' => 'editor',
-                ]
-            )->_(
-                'file',
-                'Header Image',
-                'emailHeaderImage',
-                [
-                    'template' => 'filemanager',
-                ]
-            )->_(
-                'select',
-                'Header Target page',
-                'emailHeaderTargetPage',
-                [
-                    'options'    => $options,
-                    'inputClass' => 'select2-ajax',
-                    'data-url'   => '/content/index/search/',
-                ]
-            );
+            $this->addEditor('Body', 'body', (new Attributes())->setRequired(true))
+                ->addFilemanager('Header Image', 'emailHeaderImage')
+                ->addDropdown(
+                    'Header Target page',
+                    'emailHeaderTargetPage',
+                    (new Attributes())->setOptions($options)
+                        ->setInputClass('select2-ajax')
+                        ->setDataUrl('/content/index/search/')
+                );
         endif;
 
-        $this->_(
-            'text',
-            'Send preview to',
-            'previewEmail',
-            [
-                'type' => 'email',
-            ]
-        )->_(
-            'button',
-            'Send preview',
-            'sendPreviewEmail'
-        );
+        $this->addEmail('Send preview to', 'previewEmail')
+            ->addButton('Send preview', 'sendPreviewEmail');
     }
 }

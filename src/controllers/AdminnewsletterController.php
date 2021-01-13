@@ -33,28 +33,27 @@ class AdminnewsletterController extends AbstractAdminController implements Repos
     public function sendPreviewAction(string $id): void
     {
         if ($id && $this->request->get('previewEmail')) :
-            Newsletter::setFindPublished(false);
-            $newsletter = Newsletter::findById($id);
-            if ($newsletter) :
+            $newsletter = $this->repositories->newsletter->getById($id, false);
+            if ($newsletter !== null) :
                 NewsletterQueueHelper::send(
                     NewsletterQueueFactory::create(
                         $this->request->get('previewEmail'),
                         '',
                         $id,
                         '',
-                        $newsletter->_('subject'),
-                        $newsletter->_('body')
+                        $newsletter->getSubject(),
+                        $newsletter->getBody()??''
                     ),
                     $this->setting,
                     $this->view
                 );
 
-                $this->flash->_('ADMIN_EMAIL_SEND_SUCCESS');
+                $this->flash->setSucces('ADMIN_EMAIL_SEND_SUCCESS');
             else :
-                $this->flash->_('ADMIN_EMAIL_SEND_FAILED', 'error');
+                $this->flash->setError('ADMIN_EMAIL_SEND_FAILED');
             endif;
         else :
-            $this->flash->_('ADMIN_EMAIL_SEND_FAILED', 'error');
+            $this->flash->setError('ADMIN_EMAIL_SEND_FAILED');
         endif;
 
         parent::redirect();
@@ -62,13 +61,13 @@ class AdminnewsletterController extends AbstractAdminController implements Repos
 
     public function queueNewsletterAction(string $id): void
     {
-        $message = 'NEWSLETTER_NOT_FOUND';
-        $newsletter = Newsletter::findById($id);
-        if ($newsletter) :
+        $newsletter = $this->repositories->newsletter->getById($id);
+        if ($newsletter !== null) :
             NewsletterHelper::queueMembers($newsletter);
-            $message = 'NEWSLETTER_ADDED_TO_QUEUE';
+            $this->flash->setSuccess('NEWSLETTER_ADDED_TO_QUEUE');
+        else :
+            $this->flash->setError('NEWSLETTER_NOT_FOUND');
         endif;
-        $this->flash->_($message);
 
         parent::redirect();
     }
@@ -82,11 +81,10 @@ class AdminnewsletterController extends AbstractAdminController implements Repos
 
     public function afterSave(AbstractCollection $newsletter): void
     {
-        if ($newsletter->_('parentId')) :
-            Newsletter::setFindPublished(false);
-            $parentItem = Newsletter::findById($newsletter->_('parentId'));
-            if ($parentItem) :
-                $parentItem->set('hasChildren', true);
+        if ($newsletter->getParentId() !== null) :
+            $parentItem = $this->repositories->newsletter->getById($newsletter->getParentId(), false);
+            if ($parentItem !== null) :
+                $parentItem->setHasChildren(true);
                 $parentItem->save();
             endif;
         endif;

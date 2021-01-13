@@ -21,9 +21,41 @@ class Newsletter extends AbstractCollection
      */
     public $body;
 
+    /**
+     * @var string
+     */
+    public $subject;
+
+    /**
+     * @var bool
+     */
+    public $hasChildren;
+
+    /**
+     * @var string
+     */
+    public $list;
+
+    /**
+     * @var string
+     */
+    public $emailType;
+
+    /**
+     * @var string
+     */
+    public $emailHeaderTargetPage;
+
     public function getLanguage(): ?string
     {
         return $this->language;
+    }
+
+    public function setLanguage(string $language): Newsletter
+    {
+        $this->language = $language;
+
+        return $this;
     }
 
     public function getTemplate(): ?string
@@ -42,4 +74,39 @@ class Newsletter extends AbstractCollection
 
         return $this;
     }
+
+    public function getSubject(): ?string
+    {
+        return $this->subject;
+    }
+
+    public function setHasChildren(bool $value): Newsletter
+    {
+        $this->hasChildren = $value;
+
+        return $this;
+    }
+
+    public function getList(): ?string
+    {
+        return $this->list;
+    }
+
+    public function setList(?string $list): Newsletter
+    {
+        $this->list = $list;
+
+        return $this;
+    }
+
+    public function getEmailType(): ?string
+    {
+        return $this->emailType;
+    }
+
+    public function getEmailHeaderTargetPage(): ?string
+    {
+        return $this->emailHeaderTargetPage;
+    }
+
 }

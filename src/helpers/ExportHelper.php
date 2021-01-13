@@ -7,8 +7,6 @@ use VitesseCms\Export\Helpers\CsvExportHelper;
 
 class ExportHelper extends CsvExportHelper
 {
-    protected $fields = ['members', 'subscribed', 'GdprEmail'];
-
     protected function getItemValue(AbstractCollection $item, string $fieldName): string
     {
         if ($fieldName === 'members') :

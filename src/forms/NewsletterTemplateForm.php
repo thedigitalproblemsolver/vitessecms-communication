@@ -1,56 +1,37 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace VitesseCms\Communication\Forms;
 
 use VitesseCms\Communication\Models\EmailTemplate;
 use VitesseCms\Communication\Models\NewsletterTemplate;
+use VitesseCms\Communication\Repositories\RepositoryCollection;
 use VitesseCms\Form\AbstractForm;
+use VitesseCms\Form\AbstractFormWithRepository;
 use VitesseCms\Form\Helpers\ElementHelper;
+use VitesseCms\Form\Interfaces\FormWithRepositoryInterface;
+use VitesseCms\Form\Models\Attributes;
 use VitesseCms\Language\Models\Language;
 
-/**
- * Class NewsletterTemplateForm
- */
-class NewsletterTemplateForm extends AbstractForm
+class NewsletterTemplateForm extends AbstractFormWithRepository
 {
-
     /**
-     * initialize
-     *
-     * @param NewsletterTemplate|null $item
+     * @var RepositoryCollection
      */
-    public function initialize(NewsletterTemplate $item = null)
+    protected $repositories;
+
+    public function buildForm(): FormWithRepositoryInterface
     {
-        $this->_(
-            'text',
-            '%CORE_NAME%',
-            'name',
-            ['required'  => 'required']
-        );
+        $this->addText('%CORE_NAME%', 'name', (new Attributes())->setRequired(true))
+            ->addDropdown(
+                '%ADMIN_LANGUAGE%',
+                'language',
+                (new Attributes())->setRequired(true)
+                    ->setOptions(ElementHelper::modelIteratorToOptions($this->repositories->language->findAll())
+                    ))
+            ->addEditor('template', 'template', (new Attributes())->setRequired(true))
+            ->addSubmitButton('%CORE_SAVE%')
+        ;
 
-        $this->_(
-            'select',
-            '%ADMIN_LANGUAGE%',
-            'language',
-            [
-                'required'  => 'required',
-                'options' => ElementHelper::arrayToSelectOptions(Language::findAll())
-            ]
-        );
-
-        $this->_(
-            'textarea',
-            'template',
-            'template',
-            [
-                'required'  => 'required',
-                'inputClass' => 'editor',
-            ]
-        );
-
-        $this->_(
-            'submit',
-            '%CORE_SAVE%'
-        );
+        return $this;
     }
 }
