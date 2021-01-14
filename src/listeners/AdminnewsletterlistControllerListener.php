@@ -19,6 +19,7 @@ class AdminnewsletterlistControllerListener
             $_POST['addEmail'] = null;
         endif;
     }
+
     public function beforeEdit(Event $event, AdminnewsletterlistController $controller, NewsletterList $newsletterList): void {
         $rows = [];
         foreach ($newsletterList->getMembers() as $key => $member) :

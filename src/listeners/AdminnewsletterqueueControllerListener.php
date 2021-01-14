@@ -20,6 +20,6 @@ class AdminnewsletterqueueControllerListener
             ['newsletterQueue' => $newsletterQueue]
         ));
 
-        $newsletterQueue->setAdminListName($newsletterQueue->_('email'));
+        $newsletterQueue->setAdminListName($newsletterQueue->getEmail());
     }
 }

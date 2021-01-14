@@ -14,7 +14,7 @@ class AdminemailControllerListener
     {
         $email->setAdminListExtra($controller->view->renderTemplate(
             'emailAdminListItem',
-            $controller->configuration->getRootDir().'src/communication/resources/views/admin/',
+            $controller->configuration->getVendorNameDir().'communication/src/resources/views/admin/',
             ['email' => $email]
         ));
 
