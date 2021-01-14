@@ -1,97 +1,58 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace VitesseCms\Communication\Forms;
 
 use VitesseCms\Communication\Models\Newsletter;
 use VitesseCms\Communication\Models\NewsletterList;
 use VitesseCms\Communication\Models\NewsletterQueue;
+use VitesseCms\Communication\Repositories\RepositoryCollection;
 use VitesseCms\Form\AbstractForm;
+use VitesseCms\Form\AbstractFormWithRepository;
 use VitesseCms\Form\Helpers\ElementHelper;
+use VitesseCms\Form\Interfaces\FormWithRepositoryInterface;
+use VitesseCms\Form\Models\Attributes;
 use VitesseCms\User\Models\User;
 
-/**
- * Class NewsletterQueueForm
- */
-class NewsletterQueueForm extends AbstractForm
+class NewsletterQueueForm extends AbstractFormWithRepository
 {
+    /**
+     * @var RepositoryCollection
+     */
+    protected $repositories;
 
     /**
-     * initialize
-     *
-     * @param NewsletterQueue|null $item
+     * @var NewsletterQueue
      */
-    public function initialize(NewsletterQueue $item = null)
+    protected $_entity;
+
+    public function buildForm(): FormWithRepositoryInterface
     {
-        $this->_(
-            'text',
-            '%CORE_EMAIL%',
-            'email',
-            [
-                'required'  => 'required',
-                'type' => 'email',
-                'readonly' => 'readonly'
-            ]
-        )->_(
-            'select',
+        $this->addText('%CORE_EMAIL%', 'email', (new Attributes())->setReadonly(true))
+            ->addDropdown(
             'User',
             'userId',
-            [
-                'required'  => 'required',
-                'options' => ElementHelper::arrayToSelectOptions(User::findAll()),
-                'disabled' => 'disabled'
-            ]
-        )->_(
-            'select',
+                (new Attributes())
+                    ->setReadonly(true)
+                    ->setOptions(ElementHelper::arrayToSelectOptions(User::findAll())))
+            ->addDropdown(
             'Newsletter',
             'newsletterId',
-            [
-                'required'  => 'required',
-                'options' => ElementHelper::arrayToSelectOptions(Newsletter::findAll()),
-                'disabled' => 'disabled'
-            ]
-        )->_(
-            'select',
+                (new Attributes())
+                    ->setReadonly(true)
+                    ->setOptions(ElementHelper::arrayToSelectOptions(Newsletter::findAll())))
+            ->addDropdown(
             'Newsletter list',
             'newsletterListId',
-            [
-                'required'  => 'required',
-                'options' => ElementHelper::arrayToSelectOptions(NewsletterList::findAll()),
-                'disabled' => 'disabled'
-            ]
-        )->_(
-            'text',
-            'Date sending',
-            'dateSending',
-            [
-                'type' => 'date',
-                'readonly' => 'readonly'
-            ]
-        )->_(
-            'text',
-            'Date sent',
-            'dateSent',
-            [
-                'type' => 'date',
-                'readonly' => 'readonly'
-            ]
-        )->_(
-            'text',
-            'Date opened',
-            'dateOpened',
-            [
-                'type' => 'date',
-                'readonly' => 'readonly'
-            ]
-        )->_(
-            'text',
-            'Subject',
-            'subject',
-            ['readonly' => 'readonly']
-        )->_(
-            'text',
-            'Job Queue id',
-            'jobId',
-            ['readonly' => 'readonly']
-        );
+                (new Attributes())
+                    ->setReadonly(true)
+                    ->setOptions(ElementHelper::arrayToSelectOptions(NewsletterList::findAll())))
+            ->addText('Date sending', 'dateSending', (new Attributes())->setReadonly(true))
+            ->addText('Date sent', 'dateSent',(new Attributes())->setReadonly(true))
+            ->addText('Date opened', 'dateOpened',(new Attributes())->setReadonly(true))
+            ->addText('Subject', 'subject',(new Attributes())->setReadonly(true))
+            ->addText('Job Queue id', 'jobId',(new Attributes())->setReadonly(true))
+        ;
+
+        return $this;
     }
 }

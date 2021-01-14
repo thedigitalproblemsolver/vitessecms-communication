@@ -41,6 +41,16 @@ class NewsletterQueue extends AbstractCollection
      */
     public $newsletterId;
 
+    /**
+     * @var string
+     */
+    public $dateSent;
+
+    /**
+     * @var string
+     */
+    public $dateSending;
+
     public function getBodyField(): string
     {
         return $this->_('body');
@@ -51,7 +61,7 @@ class NewsletterQueue extends AbstractCollection
         return $this->newsletterListId;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -106,6 +116,20 @@ class NewsletterQueue extends AbstractCollection
     public function setNewsletterId(string $newsletterId): NewsletterQueue
     {
         $this->newsletterId = $newsletterId;
+
+        return $this;
+    }
+
+    public function setDateSent(string $dateSent): NewsletterQueue
+    {
+        $this->dateSent = $dateSent;
+
+        return $this;
+    }
+
+    public function setDateSending(string $dateSending): NewsletterQueue
+    {
+        $this->dateSending = $dateSending;
 
         return $this;
     }

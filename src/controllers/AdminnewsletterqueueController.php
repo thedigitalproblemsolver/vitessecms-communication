@@ -23,7 +23,7 @@ class AdminnewsletterqueueController extends AbstractAdminController implements 
         $this->classForm = NewsletterQueueForm::class;
 
         $this->listTemplate = 'listNewsletterQueue';
-        $this->listTemplatePath = $this->config->get('rootDir') . 'src/communication/resources/views/admin/';
+        $this->listTemplatePath = $this->configuration->getVendorNameDir() . 'communication/src/resources/views/admin/';
     }
 
     public function viewBodyAction(string $id): void
@@ -42,13 +42,13 @@ class AdminnewsletterqueueController extends AbstractAdminController implements 
         $newsletterQueue = $this->repositories->newsletterQueue->getById($id, false);
         if ($newsletterQueue !== null) :
             $now = new \DateTime();
-            $newsletterQueue->set('dateSending', $now->format('Y-m-d H:i:s'))->save();
+            $newsletterQueue->setDateSending($now->format('Y-m-d H:i:s'))->save();
 
             if (NewsletterQueueHelper::send($newsletterQueue, $this->setting, $this->view)) :
-                $newsletterQueue->set('dateSent', $now->format('Y-m-d H:i:s'))
-                    ->set('published', true)
-                    ->save();
-
+                $newsletterQueue->setDateSent($now->format('Y-m-d H:i:s'))
+                    ->setPublished(true)
+                    ->save()
+                ;
                 $this->flash->setSucces('NEWSLETTER_SEND');
             else :
                 $this->flash->setError('Newsletter not send');

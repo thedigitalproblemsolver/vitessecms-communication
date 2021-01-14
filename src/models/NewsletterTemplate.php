@@ -29,18 +29,21 @@ class NewsletterTemplate extends AbstractCollection
     public function setTemplate(string $template): NewsletterTemplate
     {
         $this->template = $template;
+
         return $this;
     }
 
     public function setName(string $name): NewsletterTemplate
     {
         $this->name = $name;
+
         return $this;
     }
 
     public function setLanguage(string $language): NewsletterTemplate
     {
         $this->language = $language;
+
         return $this;
     }
 }
