@@ -4,7 +4,7 @@ namespace VitesseCms\Communication\Controllers;
 
 use VitesseCms\Communication\Forms\NewsletterQueueForm;
 use VitesseCms\Communication\Helpers\NewsletterQueueHelper;
-use VitesseCms\Communication\Interfaces\RepositoriesInterface;
+use VitesseCms\Communication\Repositories\RepositoriesInterface;
 use VitesseCms\Communication\Models\NewsletterQueue;
 use VitesseCms\Admin\AbstractAdminController;
 

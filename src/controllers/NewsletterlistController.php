@@ -2,7 +2,7 @@
 
 namespace VitesseCms\Communication\Controllers;
 
-use VitesseCms\Communication\Interfaces\RepositoriesInterface;
+use VitesseCms\Communication\Repositories\RepositoriesInterface;
 use VitesseCms\Core\AbstractController;
 use VitesseCms\Form\Controllers\IndexController;
 use VitesseCms\Form\Utils\FormUtil;

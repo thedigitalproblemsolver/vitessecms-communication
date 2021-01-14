@@ -4,8 +4,8 @@ namespace VitesseCms\Communication\Controllers;
 
 use VitesseCms\Admin\AbstractAdminController;
 use VitesseCms\Communication\Forms\EmailForm;
-use VitesseCms\Communication\Interfaces\RepositoriesInterface;
-use VitesseCms\Communication\Interfaces\RepositoryInterface;
+use VitesseCms\Communication\Repositories\RepositoriesInterface;
+use VitesseCms\Communication\Repositories\RepositoryInterface;
 use VitesseCms\Communication\Models\Email;
 
 class AdminemailController extends AbstractAdminController implements RepositoriesInterface

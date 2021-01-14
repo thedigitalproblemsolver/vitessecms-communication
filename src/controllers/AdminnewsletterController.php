@@ -6,7 +6,7 @@ use VitesseCms\Communication\Factories\NewsletterQueueFactory;
 use VitesseCms\Communication\Forms\NewsletterForm;
 use VitesseCms\Communication\Helpers\NewsletterHelper;
 use VitesseCms\Communication\Helpers\NewsletterQueueHelper;
-use VitesseCms\Communication\Interfaces\RepositoriesInterface;
+use VitesseCms\Communication\Repositories\RepositoriesInterface;
 use VitesseCms\Communication\Models\Newsletter;
 use VitesseCms\Admin\AbstractAdminController;
 use VitesseCms\Database\AbstractCollection;

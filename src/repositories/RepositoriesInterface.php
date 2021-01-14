@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace VitesseCms\Communication\Interfaces;
+namespace VitesseCms\Communication\Repositories;
 
 /**
  * Interface RepositoriesInterface

@@ -3,7 +3,7 @@
 namespace VitesseCms\Communication\Repositories;
 
 use VitesseCms\Block\Repositories\BlockFormBuilderRepository;
-use VitesseCms\Communication\Interfaces\RepositoryInterface;
+use VitesseCms\Communication\Repositories\RepositoryInterface;
 use VitesseCms\Content\Repositories\ItemRepository;
 use VitesseCms\Core\Interfaces\RepositoryCollectionInterface;
 use VitesseCms\Core\Repositories\DatagroupRepository;
