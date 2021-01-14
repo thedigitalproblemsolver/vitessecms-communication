@@ -51,6 +51,16 @@ class Newsletter extends AbstractCollection
      */
     public $name;
 
+    /**
+     * @var int
+     */
+    public $days;
+
+    /**
+     * @var string
+     */
+    public $sendTime;
+
     public function getLanguage(): ?string
     {
         return $this->language;
@@ -135,4 +145,13 @@ class Newsletter extends AbstractCollection
         return $this;
     }
 
+    public function getDays(): ?int
+    {
+        return $this->days;
+    }
+
+    public function getSendTime(): ?string
+    {
+        return $this->sendTime;
+    }
 }

@@ -1,31 +1,19 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace VitesseCms\Communication\Helpers;
 
+use VitesseCms\Communication\Models\NewsletterList;
 use VitesseCms\Database\AbstractCollection;
 
-/**
- * Class NewsletterListHelper
- */
 class NewsletterListHelper
 {
-    /**
-     * @param $email
-     * @param $newsletterList
-     *
-     * @return bool
-     */
-    public static function emailExistsAsMember(
-        string $email,
-        AbstractCollection $newsletterList
-    ): bool {
-        if( \is_array($newsletterList->_('members'))) :
-            foreach ($newsletterList->_('members') as $member):
-                if (isset($member['email']) && $member['email'] === $email) :
-                    return true;
-                endif;
-            endforeach;
-        endif;
+    public static function emailExistsAsMember(string $email, NewsletterList $newsletterList): bool
+    {
+        foreach ($newsletterList->getMembers() as $member):
+            if (isset($member['email']) && $member['email'] === $email) :
+                return true;
+            endif;
+        endforeach;
 
         return false;
     }

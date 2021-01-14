@@ -1,50 +1,45 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace VitesseCms\Communication\Helpers;
 
 use VitesseCms\Communication\Factories\NewsletterListMemberFactory;
 use VitesseCms\Communication\Models\Newsletter;
 use VitesseCms\Communication\Models\NewsletterList;
+use VitesseCms\Communication\Repositories\RepositoryCollection;
+use VitesseCms\Database\Models\FindValue;
+use VitesseCms\Database\Models\FindValueIterator;
 
-/**
- * Class NewsletterHelper
- */
-class NewsletterHelper {
-
-    /**
-     * @param Newsletter $newsletter
-     * @param array|null $member
-     *
-     * @throws \Phalcon\Mvc\Collection\Exception
-     */
-    public static function queueMembers(Newsletter $newsletter, array $member = null): void
+class NewsletterHelper
+{
+    public static function queueMembers(
+        Newsletter $newsletter,
+        RepositoryCollection $repositories,
+        array $member = null
+    ): void
     {
-        if(!$newsletter->_('hasChildren')) :
+        if(!$newsletter->hasChildren) :
             NewsletterQueueHelper::addToQueue($newsletter, null, $member);
         else :
-            Newsletter::setFindValue('parentId', (string)$newsletter->getId());
-            $childNewsletters = Newsletter::findAll();
+            $childNewsletters = $repositories->newsletter->findAll(
+                new FindValueIterator([new FindValue('parentId',(string)$newsletter->getId())])
+            );
+
             $referenceTime = new \DateTime();
-            /** @var Newsletter $childNewsletter */
-            foreach ($childNewsletters as $childNewsletter) :
-                if($childNewsletter->_('days')) :
-                    $referenceTime->modify('+'.$childNewsletter->_('days').' days');
+            while ($childNewsletters->valid()) :
+                $childNewsletter = $childNewsletters->current();
+                if($childNewsletter->getDays() !== null) :
+                    $referenceTime->modify('+'.$childNewsletter->getDays().' days');
                 endif;
-                if($childNewsletter->_('sendTime')) :
-                    $timeArray = explode(':',$childNewsletter->_('sendTime'));
+                if($childNewsletter->getSendTime() !== null) :
+                    $timeArray = explode(':',$childNewsletter->getSendTime());
                     $referenceTime->setTime($timeArray[0],$timeArray[1],0);
                 endif;
                 NewsletterQueueHelper::addToQueue( $childNewsletter, $referenceTime, $member);
-            endforeach;
+                $childNewsletters->next();
+            endwhile;
         endif;
     }
 
-    /**
-     * @param Newsletter $newsletter
-     * @param string $email
-     *
-     * @throws \Phalcon\Mvc\Collection\Exception
-     */
     public static function addMemberByEmail(Newsletter $newsletter, string $email ): void
     {
         $newsletterList = NewsletterList::findById($newsletter->_('list'));
@@ -60,12 +55,6 @@ class NewsletterHelper {
         endif;
     }
 
-    /**
-     * @param Newsletter $newsletter
-     * @param string $email
-     *
-     * @throws \Phalcon\Mvc\Collection\Exception
-     */
     public static function unsubscribeMemberByEmail(Newsletter $newsletter, string $email ) {
         $newsletterList = NewsletterList::findById($newsletter->_('list'));
         if($newsletterList) :
@@ -74,12 +63,6 @@ class NewsletterHelper {
         endif;
     }
 
-    /**
-     * @param Newsletter $newsletter
-     * @param string $email
-     *
-     * @throws \Phalcon\Mvc\Collection\Exception
-     */
     public static function removeMemberByEmail(Newsletter $newsletter, string $email ) {
         $newsletterList = NewsletterList::findById($newsletter->_('list'));
         if($newsletterList) :

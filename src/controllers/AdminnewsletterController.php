@@ -63,7 +63,10 @@ class AdminnewsletterController extends AbstractAdminController implements Repos
     {
         $newsletter = $this->repositories->newsletter->getById($id);
         if ($newsletter !== null) :
-            NewsletterHelper::queueMembers($newsletter);
+            NewsletterHelper::queueMembers(
+                $newsletter,
+                $this->repositories
+            );
             $this->flash->setSuccess('NEWSLETTER_ADDED_TO_QUEUE');
         else :
             $this->flash->setError('NEWSLETTER_NOT_FOUND');
