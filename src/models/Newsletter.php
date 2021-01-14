@@ -46,6 +46,11 @@ class Newsletter extends AbstractCollection
      */
     public $emailHeaderTargetPage;
 
+    /**
+     * @var string
+     */
+    public $name;
+
     public function getLanguage(): ?string
     {
         return $this->language;
@@ -107,6 +112,27 @@ class Newsletter extends AbstractCollection
     public function getEmailHeaderTargetPage(): ?string
     {
         return $this->emailHeaderTargetPage;
+    }
+
+    public function setTemplate(?string $template): Newsletter
+    {
+        $this->template = $template;
+
+        return $this;
+    }
+
+    public function setSubject(string $subject): Newsletter
+    {
+        $this->subject = $subject;
+
+        return $this;
+    }
+
+    public function setName(string $name): Newsletter
+    {
+        $this->name = $name;
+
+        return $this;
     }
 
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace VitesseCms\Communication\Factories;
 
@@ -7,22 +7,8 @@ use VitesseCms\Communication\Models\NewsletterList;
 use VitesseCms\Communication\Models\NewsletterTemplate;
 use VitesseCms\Language\Models\Language;
 
-/**
- * Class NewsletterFactory
- */
 class NewsletterFactory
 {
-    /**
-     * @param string $name
-     * @param Language $language
-     * @param NewsletterList $newsletterList
-     * @param NewsletterTemplate $newsletterTemplate
-     * @param string $subject
-     * @param string $body
-     * @param bool $published
-     *
-     * @return Newsletter
-     */
     public static function create(
         string $name,
         Language $language,
@@ -31,15 +17,15 @@ class NewsletterFactory
         string $subject,
         string $body = '',
         bool $published = false
-    ): Newsletter {
+    ): Newsletter
+    {
         return (new Newsletter())
-            ->set('name', $name)
-            ->set('language', (string)$language->getId())
-            ->set('list', (string)$newsletterList->getId())
-            ->set('template', (string)$newsletterTemplate->getId())
-            ->set('subject', $subject)
-            ->set('body', $body)
-            ->set('published', $published)
-        ;
+            ->setName($name)
+            ->setLanguage((string)$language->getId())
+            ->setList((string)$newsletterList->getId())
+            ->setTemplate((string)$newsletterTemplate->getId())
+            ->setSubject($subject)
+            ->setBody($body)
+            ->setPublished($published);
     }
 }

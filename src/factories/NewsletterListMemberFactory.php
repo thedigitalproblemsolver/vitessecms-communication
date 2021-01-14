@@ -1,29 +1,14 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace VitesseCms\Communication\Factories;
 
 use DateTime;
 use VitesseCms\Communication\Models\NewsletterList;
 
-/**
- * Class NewsletterListMemberFactory
- */
 class NewsletterListMemberFactory
 {
-    /**
-     * @param string $email
-     * @param DateTime $subscribeDate
-     * @param NewsletterList $newsletterList
-     * @param string $userId
-     *
-     * @return array
-     */
-    public static function create(
-        string $email,
-        DateTime $subscribeDate,
-        NewsletterList $newsletterList,
-        string $userId = ''
-    ): array {
+    public static function create(string $email, DateTime $subscribeDate, NewsletterList $newsletterList, string $userId = ''): array
+    {
         return [
             'email'           => $email,
             'userId'          => $userId,

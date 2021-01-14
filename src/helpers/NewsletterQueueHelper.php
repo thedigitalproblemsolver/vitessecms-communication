@@ -69,20 +69,6 @@ class NewsletterQueueHelper
         )->send();
     }
 
-    public static function recordOpened(string $newsletterQueueId): void
-    {
-        NewsletterQueue::setFindPublished(false);
-        $newsletterQueue = NewsletterQueue::findById($newsletterQueueId);
-        if (
-            $newsletterQueue
-            && $newsletterQueue->_('dateOpened') === ''
-        ) :
-            $newsletterQueue->set('dateOpened',
-                (new DateTime())->format('Y-m-d H:i:s')
-            )->save();
-        endif;
-    }
-
     public static function addToQueue(
         Newsletter $newsletter,
         ?DateTime $referenceTime = null,

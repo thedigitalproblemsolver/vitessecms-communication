@@ -25,6 +25,16 @@ class NewsletterList extends AbstractCollection
      */
     protected $addEmail;
 
+    /**
+     * @var string
+     */
+    public $name;
+
+    /**
+     * @var string
+     */
+    public $language;
+
     public function onConstruct()
     {
         $this->members = [];
@@ -197,5 +207,19 @@ class NewsletterList extends AbstractCollection
     public function getMembers(): array
     {
         return $this->members;
+    }
+
+    public function setName(string $name): NewsletterList
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function setLanguage(string $language): NewsletterList
+    {
+        $this->language = $language;
+
+        return $this;
     }
 }

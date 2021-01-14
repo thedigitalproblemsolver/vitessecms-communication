@@ -6,18 +6,6 @@ use VitesseCms\Communication\Models\Email;
 
 class EmailFactory
 {
-    /**
-     * @param string $subject
-     * @param string $body
-     * @param string $systemAction
-     * @param string $triggerState
-     * @param bool $published
-     * @param string|null $alternativeRecipient
-     * @param string|null $messageSuccess
-     * @param string|null $messageError
-     *
-     * @return Email
-     */
     public static function create(
         string $subject,
         string $body,
@@ -27,16 +15,17 @@ class EmailFactory
         string $alternativeRecipient = null,
         string $messageSuccess = null,
         string $messageError = null
-    ): Email {
+    ): Email
+    {
         $email = new Email();
-        $email->set('subject', $subject, true);
-        $email->set('body', $body, true);
-        $email->set('systemAction', $systemAction);
-        $email->set('state', $triggerState);
-        $email->set('published', $published);
-        $email->set('recipient', $alternativeRecipient,true);
-        $email->set('messageSuccess', $messageSuccess, true);
-        $email->set('messageError', $messageError,true);
+        $email->set('subject', $subject, true)
+            ->set('body', $body, true)
+            ->setSystemAction($systemAction)
+            ->setState($triggerState)
+            ->setPublished($published)
+            ->set('recipient', $alternativeRecipient, true)
+            ->set('messageSuccess', $messageSuccess, true)
+            ->set('messageError', $messageError, true);
 
         return $email;
     }
