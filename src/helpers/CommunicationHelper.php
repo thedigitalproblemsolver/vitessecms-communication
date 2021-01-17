@@ -32,11 +32,13 @@ class CommunicationHelper
             if ($view->getVar('systemEmailToAddress')) :
                 $toAddress = $view->getVar('systemEmailToAddress');
             endif;
-            self::sendSystemEmail($toAddress, $systemMailState, strtolower(
-                $router->getModuleName() .
-                $router->getControllerName() .
-                $router->getActionName()
-            ));
+            if(!empty($toAddress)) :
+                self::sendSystemEmail($toAddress, $systemMailState, strtolower(
+                    $router->getModuleName() .
+                    $router->getControllerName() .
+                    $router->getActionName()
+                ));
+            endif;
         endif;
     }
     
