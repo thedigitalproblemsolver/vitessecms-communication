@@ -10,7 +10,7 @@ use VitesseCms\Communication\Repositories\RepositoryInterface;
 use VitesseCms\Communication\Models\NewsletterList;
 use VitesseCms\Admin\AbstractAdminController;
 use VitesseCms\Communication\Repositories\RepositoryCollection;
-use VitesseCms\Core\Repositories\DatafieldRepository;
+use VitesseCms\Datafield\Repositories\DatafieldRepository;
 use VitesseCms\Core\Repositories\DatagroupRepository;
 use VitesseCms\Database\AbstractCollection;
 use VitesseCms\Core\Utils\FileUtil;
