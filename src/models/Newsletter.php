@@ -145,7 +145,7 @@ class Newsletter extends AbstractCollection
         return $this;
     }
 
-    public function getDays(): ?int
+    public function getDays(): ?float
     {
         return $this->days;
     }
