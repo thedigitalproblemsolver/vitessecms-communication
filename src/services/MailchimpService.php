@@ -3,9 +3,9 @@
 namespace VitesseCms\Communication\Services;
 
 use DrewM\MailChimp\MailChimp;
+use VitesseCms\Configuration\Services\ConfigService;
 use VitesseCms\Content\Models\Item;
 use VitesseCms\Setting\Models\Setting;
-use VitesseCms\Core\Services\ConfigService;
 use VitesseCms\Core\Services\UrlService;
 use VitesseCms\Setting\Services\SettingService;
 use VitesseCms\Shop\Models\Order;
