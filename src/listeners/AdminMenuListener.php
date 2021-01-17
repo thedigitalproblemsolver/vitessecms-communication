@@ -20,7 +20,7 @@ class AdminMenuListener
                 ->addChild('Newsletter Queue', 'admin/communication/adminnewsletterqueue/adminList')
             ;
 
-            $adminMenu->addDropbown('Communication', $children);
+            $adminMenu->addDropdown('Communication', $children);
         endif;
     }
 }
