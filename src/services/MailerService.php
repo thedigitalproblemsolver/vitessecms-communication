@@ -2,8 +2,8 @@
 
 namespace VitesseCms\Communication\Services;
 
+use VitesseCms\Configuration\Services\ConfigService;
 use VitesseCms\Content\Services\ContentService;
-use VitesseCms\Core\Services\ConfigService;
 use VitesseCms\Core\Services\ViewService;
 use VitesseCms\Core\Utils\FileUtil;
 use VitesseCms\Sef\Utils\UtmUtil;
