@@ -19,7 +19,7 @@
   },
   "require": {
     "vitessecms/export": "~0.0.6",
-    "vitessecms/configuration": "~0.0.5",
+    "vitessecms/configuration": "~0.0.6",
     "drewm/mailchimp-api": "^2.5",
     "phalcon/incubator": "3.2.6",
     "vitessecms/language": "~0.0.1",
