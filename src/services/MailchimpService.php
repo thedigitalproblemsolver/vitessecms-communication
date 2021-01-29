@@ -76,7 +76,7 @@ class MailchimpService
                         ->set('value', uniqid('', true), true)
                         ->save();
                     $this->createStore(
-                        $mailchipStoreIdSetting->_('value'),
+                        $mailchipStoreIdSetting->getValueField(),
                         $this->setting->get('MAILCHIMP_STORE_LISTID'),
                         $this->url->getBaseUri()
                     );
