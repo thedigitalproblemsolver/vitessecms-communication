@@ -13,7 +13,7 @@ use VitesseCms\Communication\Repositories\RepositoryCollection;
 use VitesseCms\Content\Repositories\ItemRepository;
 use VitesseCms\Core\AbstractModule;
 use VitesseCms\Core\Interfaces\RepositoryCollectionInterface;
-use VitesseCms\Core\Repositories\DatagroupRepository;
+use VitesseCms\Datagroup\Repositories\DatagroupRepository;
 use VitesseCms\Language\Repositories\LanguageRepository;
 use Phalcon\DiInterface;
 
