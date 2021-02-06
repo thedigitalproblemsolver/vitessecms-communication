@@ -11,7 +11,7 @@ use VitesseCms\Communication\Models\NewsletterList;
 use VitesseCms\Admin\AbstractAdminController;
 use VitesseCms\Communication\Repositories\RepositoryCollection;
 use VitesseCms\Datafield\Repositories\DatafieldRepository;
-use VitesseCms\Core\Repositories\DatagroupRepository;
+use VitesseCms\Datagroup\Repositories\DatagroupRepository;
 use VitesseCms\Database\AbstractCollection;
 use VitesseCms\Core\Utils\FileUtil;
 use VitesseCms\Export\Repositories\ExportTypeRepository;

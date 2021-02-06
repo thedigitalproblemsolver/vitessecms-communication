@@ -9,7 +9,7 @@ use VitesseCms\Communication\Repositories\NewsletterQueueRepository;
 use VitesseCms\Communication\Repositories\NewsletterRepository;
 use VitesseCms\Communication\Repositories\NewsletterTemplateRepository;
 use VitesseCms\Content\Repositories\ItemRepository;
-use VitesseCms\Core\Repositories\DatagroupRepository;
+use VitesseCms\Datagroup\Repositories\DatagroupRepository;
 use VitesseCms\Language\Repositories\LanguageRepository;
 
 /**

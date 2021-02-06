@@ -6,7 +6,7 @@ use VitesseCms\Block\Repositories\BlockFormBuilderRepository;
 use VitesseCms\Communication\Repositories\RepositoryInterface;
 use VitesseCms\Content\Repositories\ItemRepository;
 use VitesseCms\Core\Interfaces\RepositoryCollectionInterface;
-use VitesseCms\Core\Repositories\DatagroupRepository;
+use VitesseCms\Datagroup\Repositories\DatagroupRepository;
 use VitesseCms\Database\Interfaces\BaseRepositoriesInterface;
 use VitesseCms\Language\Repositories\LanguageRepository;
 
