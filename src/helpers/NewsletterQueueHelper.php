@@ -7,7 +7,7 @@ use VitesseCms\Communication\Models\Newsletter;
 use VitesseCms\Communication\Models\NewsletterList;
 use VitesseCms\Communication\Models\NewsletterQueue;
 use VitesseCms\Content\Repositories\ItemRepository;
-use VitesseCms\Core\Models\JobQueue;
+use VitesseCms\Job\Models\JobQueue;
 use VitesseCms\Core\Services\RouterService;
 use VitesseCms\Core\Services\ViewService;
 use VitesseCms\Database\Utils\MongoUtil;
