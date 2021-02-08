@@ -5,7 +5,7 @@ namespace VitesseCms\Communication\Helpers;
 use VitesseCms\Communication\Models\Email;
 use VitesseCms\Core\Services\ViewService;
 use VitesseCms\Database\AbstractCollection;
-use VitesseCms\Core\Factories\LogFactory;
+use VitesseCms\Log\Factories\LogFactory;
 use Phalcon\Di;
 use Phalcon\Mvc\Router;
 
