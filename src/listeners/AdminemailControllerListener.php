@@ -2,6 +2,8 @@
 
 namespace VitesseCms\Communication\Listeners;
 
+use VitesseCms\Admin\AbstractAdminController;
+use VitesseCms\Admin\Forms\AdminlistFormInterface;
 use VitesseCms\Communication\Controllers\AdminemailController;
 use VitesseCms\Communication\Models\Email;
 use VitesseCms\User\Utils\PermissionUtils;
@@ -29,5 +31,23 @@ class AdminemailControllerListener
                 'class'  => 'fa fa-envelope',
             ]));
         endif;
+    }
+
+    public function adminListFilter(
+        Event $event,
+        AbstractAdminController $controller,
+        AdminlistFormInterface $form
+    ): string
+    {
+        $form->addText(
+            'Subject',
+            'filter[subject.'. $form->configuration->getLanguageShort() .']'
+        );
+        $form->addPublishedField($form);
+
+        return $form->renderForm(
+            $controller->getLink() . '/' . $controller->router->getActionName(),
+            'adminFilter'
+        );
     }
 }

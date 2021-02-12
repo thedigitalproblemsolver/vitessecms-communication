@@ -2,6 +2,8 @@
 
 namespace VitesseCms\Communication\Listeners;
 
+use VitesseCms\Admin\AbstractAdminController;
+use VitesseCms\Admin\Forms\AdminlistFormInterface;
 use VitesseCms\Communication\Controllers\AdminnewsletterlistController;
 use VitesseCms\Communication\Models\NewsletterList;
 use Phalcon\Events\Event;
@@ -49,5 +51,20 @@ class AdminnewsletterlistControllerListener
         );
 
         $newsletterList->setDataHtml($dataHtml);
+    }
+
+    public function adminListFilter(
+        Event $event,
+        AbstractAdminController $controller,
+        AdminlistFormInterface $form
+    ): string
+    {
+        $form->addText('%CORE_NAME%', 'filter[name]');
+        $form->addPublishedField($form);
+
+        return $form->renderForm(
+            $controller->getLink() . '/' . $controller->router->getActionName(),
+            'adminFilter'
+        );
     }
 }
