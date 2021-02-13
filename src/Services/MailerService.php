@@ -94,7 +94,7 @@ class MailerService extends Manager
 
     protected function parseBody(string $body, string $emailType = ''): string
     {
-        $path = 'template/core/views/emails';
+        $path = 'template/core/Views/emails';
         $template = 'core';
 
         if (!empty($emailType)) :
