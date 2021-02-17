@@ -42,7 +42,7 @@ class AdminnewsletterlistControllerListener
 ;
         $dataHtml = $controller->view->renderTemplate(
             'adminNewsletterListMembers',
-            $controller->configuration->getVendorNameDir().'communication/src/resources/views/admin/',
+            $controller->configuration->getVendorNameDir().'communication/src/Resources/views/admin/',
             [
                 'baseLink' => $link,
                 'baseId' => (string)$newsletterList->getId(),

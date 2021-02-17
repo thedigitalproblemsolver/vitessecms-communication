@@ -17,7 +17,7 @@ class EmailForm extends AbstractForm
         $options = [];
         $modules = SystemUtil::getModules($this->configuration);
         foreach ($modules as $moduleName => $modulePath) :
-            $controllers = DirectoryUtil::getFilelist($modulePath . '/controllers');
+            $controllers = DirectoryUtil::getFilelist($modulePath . '/Controllers');
             foreach ($controllers as $controllerPath => $controllerName) :
                 $controllerName = str_replace(
                     ['.php', 'Controller'],

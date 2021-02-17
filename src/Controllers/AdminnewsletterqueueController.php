@@ -23,7 +23,7 @@ class AdminnewsletterqueueController extends AbstractAdminController implements 
         $this->classForm = NewsletterQueueForm::class;
 
         $this->listTemplate = 'listNewsletterQueue';
-        $this->listTemplatePath = $this->configuration->getVendorNameDir() . 'communication/src/resources/views/admin/';
+        $this->listTemplatePath = $this->configuration->getVendorNameDir() . 'communication/src/Resources/views/admin/';
     }
 
     public function viewBodyAction(string $id): void

@@ -30,7 +30,7 @@ class NewsletterqueueController extends AbstractController implements Repositori
         endif;
 
         $this->response->setHeader('Content-Type', 'image/png');
-        echo file_get_contents($this->configuration->getVendorNameDir().'communication/src/resources/assets/images/1_1_transparent.png');
+        echo file_get_contents($this->configuration->getVendorNameDir().'communication/src/Resources/assets/images/1_1_transparent.png');
 
         $this->disableView();
     }

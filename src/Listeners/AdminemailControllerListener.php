@@ -16,7 +16,7 @@ class AdminemailControllerListener
     {
         $email->setAdminListExtra($controller->view->renderTemplate(
             'emailAdminListItem',
-            $controller->configuration->getVendorNameDir().'communication/src/resources/views/admin/',
+            $controller->configuration->getVendorNameDir().'communication/src/Resources/views/admin/',
             ['email' => $email]
         ));
 
@@ -27,7 +27,7 @@ class AdminemailControllerListener
             'sendPreview'
         )) :
             $email->setExtraAdminListButtons(Tag::linkTo([
-                'action' => '/admin/communication/adminemail/sendPreview/'.$email->getId(),
+                'action' => '/Admin/communication/adminemail/sendPreview/'.$email->getId(),
                 'class'  => 'fa fa-envelope',
             ]));
         endif;
