@@ -67,7 +67,8 @@ class RepositoryCollection implements RepositoryInterface, RepositoryCollectionI
         NewsletterQueueRepository $newsletterQueueRepository,
         EmailRepository $emailRepository,
         ItemRepository $itemRepository
-    ) {
+    )
+    {
         $this->newsletterTemplate = $newsletterTemplateRepository;
         $this->blockFormBuilder = $blockFormBuilderRepository;
         $this->language = $languageRepository;

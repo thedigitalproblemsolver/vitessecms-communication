@@ -38,12 +38,13 @@ class MailerService extends Manager
         ConfigService $configuration,
         ContentService $content,
         ViewService $viewService
-    ) {
+    )
+    {
         parent::__construct([
             'driver' => 'mail',
-            'from'   => [
+            'from' => [
                 'email' => $setting->get('WEBSITE_CONTACT_EMAIL'),
-                'name'  => $setting->get('WEBSITE_DEFAULT_NAME'),
+                'name' => $setting->get('WEBSITE_DEFAULT_NAME'),
             ],
         ]);
         $this->setting = $setting;
@@ -58,7 +59,8 @@ class MailerService extends Manager
         string $body,
         string $emailType = '',
         string $replyTo = ''
-    ): bool {
+    ): bool
+    {
         return (bool)$this->prepareMail(
             $toAddress,
             $subject,
@@ -74,12 +76,13 @@ class MailerService extends Manager
         string $body,
         string $emailType = '',
         string $replyTo = ''
-    ): Message {
+    ): Message
+    {
         $mailMessage = $this->createMessage()
             ->to($toAddress)
             ->subject($this->prepareString($subject))
             ->content($this->parseBody($body, $emailType));
-        if($this->setting->has('WEBSITE_CATCHALL_EMAIL')) :
+        if ($this->setting->has('WEBSITE_CATCHALL_EMAIL')) :
             $mailMessage->bcc($this->setting->get('WEBSITE_CATCHALL_EMAIL'));
         endif;
 
@@ -90,6 +93,22 @@ class MailerService extends Manager
         $this->embedImages($mailMessage);
 
         return $mailMessage;
+    }
+
+    protected function prepareString(string $content): string
+    {
+        preg_match_all('/{{([a-zA-Z_]*)}}/', $content, $aMatches);
+        if (is_array($aMatches) && isset($aMatches[1]) && is_array($aMatches[1])) :
+            foreach ($aMatches[1] as $key => $value) :
+                $content = str_replace(
+                    ['http://{{' . $value . '}}', 'https://{{' . $value . '}}', '{{' . $value . '}}'],
+                    ['{{' . $value . '}}', '{{' . $value . '}}', $this->view->getVar($value)],
+                    $content
+                );
+            endforeach;
+        endif;
+
+        return $content;
     }
 
     protected function parseBody(string $body, string $emailType = ''): string
@@ -109,26 +128,10 @@ class MailerService extends Manager
         return UtmUtil::append($this->content->parseContent(
             $this->view->renderTemplate(
                 $template,
-                $this->configuration->getRootDir().$path,
+                $this->configuration->getRootDir() . $path,
                 ['sendMailBody' => $this->prepareString($body)]
             )
         ));
-    }
-
-    protected function prepareString(string $content): string
-    {
-        preg_match_all('/{{([a-zA-Z_]*)}}/', $content, $aMatches);
-        if (is_array($aMatches) && isset($aMatches[1]) && is_array($aMatches[1])) :
-            foreach ($aMatches[1] as $key => $value) :
-                $content = str_replace(
-                    ['http://{{'.$value.'}}', 'https://{{'.$value.'}}', '{{'.$value.'}}'],
-                    ['{{'.$value.'}}', '{{'.$value.'}}', $this->view->getVar($value)],
-                    $content
-                );
-            endforeach;
-        endif;
-
-        return $content;
     }
 
     protected function embedImages(Message $message): void

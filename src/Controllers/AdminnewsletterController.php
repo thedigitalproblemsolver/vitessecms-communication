@@ -42,7 +42,7 @@ class AdminnewsletterController extends AbstractAdminController implements Repos
                         $id,
                         '',
                         $newsletter->getSubject(),
-                        $newsletter->getBody()??''
+                        $newsletter->getBody() ?? ''
                     ),
                     $this->setting,
                     $this->view

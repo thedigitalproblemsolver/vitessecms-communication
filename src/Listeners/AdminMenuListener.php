@@ -16,8 +16,7 @@ class AdminMenuListener
                 ->addChild('Newsletter lists', 'admin/communication/adminnewsletterlist/adminList')
                 ->addChild('Newsletter template', 'admin/communication/adminnewslettertemplate/adminList')
                 ->addChild('Newsletter', 'admin/communication/adminnewsletter/adminList')
-                ->addChild('Newsletter Queue', 'admin/communication/adminnewsletterqueue/adminList')
-            ;
+                ->addChild('Newsletter Queue', 'admin/communication/adminnewsletterqueue/adminList');
 
             $adminMenu->addDropdown('Communication', $children);
         endif;

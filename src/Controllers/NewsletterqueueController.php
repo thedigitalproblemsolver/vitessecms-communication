@@ -11,9 +11,9 @@ class NewsletterqueueController extends AbstractController implements Repositori
     public function unsubscribeAction(string $newsletterQueueId): void
     {
         $newsletterQueue = $this->repositories->newsletterQueue->getById($newsletterQueueId);
-        if($newsletterQueue !== null) :
+        if ($newsletterQueue !== null) :
             $newsletterList = $this->repositories->newsletterList->getById($newsletterQueue->getNewsletterListId());
-            if($newsletterList !== null) :
+            if ($newsletterList !== null) :
                 $newsletterList->unsubscribeMember($newsletterQueue->getEmail())->save();
                 $this->flash->setSucces('NEWSLETTER_LIST_UNSUBSCRIBE_SUCCESS');
             endif;
@@ -26,11 +26,11 @@ class NewsletterqueueController extends AbstractController implements Repositori
     {
         $newsletterQueue = $this->repositories->newsletterQueue->getById($newsletterQueueId);
         if ($newsletterQueue !== null && $newsletterQueue->getDateOpened() !== null) :
-                $newsletterQueue->setDateOpened((new DateTime())->format('Y-m-d H:i:s'))->save();
+            $newsletterQueue->setDateOpened((new DateTime())->format('Y-m-d H:i:s'))->save();
         endif;
 
         $this->response->setHeader('Content-Type', 'image/png');
-        echo file_get_contents($this->configuration->getVendorNameDir().'communication/src/Resources/assets/images/1_1_transparent.png');
+        echo file_get_contents($this->configuration->getVendorNameDir() . 'communication/src/Resources/assets/images/1_1_transparent.png');
 
         $this->disableView();
     }

@@ -31,8 +31,7 @@ class NewsletterListImportForm extends AbstractFormWithRepository
                 ->setOptions(ElementHelper::modelIteratorToOptions($this->repositories->newsletterList->findAll())
                 ))
             ->addUpload('Importfile', 'file', (new Attributes())->setRequired(true))
-            ->addSubmitButton('Import file')
-        ;
+            ->addSubmitButton('Import file');
 
         return $this;
     }

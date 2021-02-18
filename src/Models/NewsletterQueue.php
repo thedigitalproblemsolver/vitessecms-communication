@@ -61,9 +61,23 @@ class NewsletterQueue extends AbstractCollection
         return $this->newsletterListId;
     }
 
+    public function setNewsletterListId(string $newsletterListId): NewsletterQueue
+    {
+        $this->newsletterListId = $newsletterListId;
+
+        return $this;
+    }
+
     public function getEmail(): ?string
     {
         return $this->email;
+    }
+
+    public function setEmail(string $email): NewsletterQueue
+    {
+        $this->email = $email;
+
+        return $this;
     }
 
     public function getDateOpened(): ?string
@@ -88,20 +102,6 @@ class NewsletterQueue extends AbstractCollection
     public function setSubject(string $subject): NewsletterQueue
     {
         $this->subject = $subject;
-
-        return $this;
-    }
-
-    public function setNewsletterListId(string $newsletterListId): NewsletterQueue
-    {
-        $this->newsletterListId = $newsletterListId;
-
-        return $this;
-    }
-
-    public function setEmail(string $email): NewsletterQueue
-    {
-        $this->email = $email;
 
         return $this;
     }

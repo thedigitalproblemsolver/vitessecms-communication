@@ -17,7 +17,8 @@ class AdminnewsletterqueueControllerListener
         Event $event,
         AdminnewsletterqueueController $controller,
         NewsletterQueue $newsletterQueue
-    ): void {
+    ): void
+    {
         $newsletterQueue->setAdminListExtra($controller->view->renderModuleTemplate(
             'communication',
             'newsletterQueueAdminListItem',
@@ -40,8 +41,7 @@ class AdminnewsletterqueueControllerListener
                 'filter[newsletterId]',
                 (new Attributes())->setOptions(ElementHelper::arrayToSelectOptions(Newsletter::findAll())
                 )
-            )
-        ;
+            );
 
         return $form->renderForm(
             $controller->getLink() . '/' . $controller->router->getActionName(),

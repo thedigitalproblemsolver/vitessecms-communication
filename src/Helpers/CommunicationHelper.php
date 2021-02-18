@@ -14,7 +14,8 @@ class CommunicationHelper
     public static function sendRedirectEmail(
         Router $router,
         ViewService $view
-    ): void {
+    ): void
+    {
         $systemMailState = null;
 
         if (Di::getDefault()->get('flash')->has('error')) :
@@ -32,7 +33,7 @@ class CommunicationHelper
             if ($view->getVar('systemEmailToAddress')) :
                 $toAddress = $view->getVar('systemEmailToAddress');
             endif;
-            if(!empty($toAddress)) :
+            if (!empty($toAddress)) :
                 self::sendSystemEmail($toAddress, $systemMailState, strtolower(
                     $router->getModuleName() .
                     $router->getControllerName() .
@@ -41,7 +42,7 @@ class CommunicationHelper
             endif;
         endif;
     }
-    
+
     public static function sendSystemEmail(
         string $toAddress,
         string $systemMailState,
@@ -53,11 +54,11 @@ class CommunicationHelper
             Email::setFindValue('state', $systemMailState);
             Email::setFindValue('systemAction', $systemAction);
             $emails = Email::findAll();
-            if (\count($emails) > 0 ) :
+            if (\count($emails) > 0) :
                 /** @var AbstractCollection $email */
                 foreach ($emails as $email) :
                     $realToAddress = $toAddress;
-                    if(
+                    if (
                         \is_string($email->_('recipient'))
                         && !empty($email->_('recipient'))
                     ) :
@@ -79,7 +80,7 @@ class CommunicationHelper
                         LogFactory::create(
                             $email->getId(),
                             Email::class,
-                            'Email send successfull : '.$email->_('subject').' to '.$realToAddress
+                            'Email send successfull : ' . $email->_('subject') . ' to ' . $realToAddress
                         )->save();
                     elseif (
                         \is_string($email->_('messageError'))
@@ -89,7 +90,7 @@ class CommunicationHelper
                         LogFactory::create(
                             $email->getId(),
                             Email::class,
-                            'Email send failed : '.$email->_('subject').' to '.$realToAddress
+                            'Email send failed : ' . $email->_('subject') . ' to ' . $realToAddress
                         )->save();
                     endif;
                 endforeach;

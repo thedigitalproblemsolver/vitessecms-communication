@@ -29,29 +29,28 @@ class NewsletterQueueForm extends AbstractFormWithRepository
     {
         $this->addText('%CORE_EMAIL%', 'email', (new Attributes())->setReadonly(true))
             ->addDropdown(
-            'User',
-            'userId',
+                'User',
+                'userId',
                 (new Attributes())
                     ->setReadonly(true)
                     ->setOptions(ElementHelper::arrayToSelectOptions(User::findAll())))
             ->addDropdown(
-            'Newsletter',
-            'newsletterId',
+                'Newsletter',
+                'newsletterId',
                 (new Attributes())
                     ->setReadonly(true)
                     ->setOptions(ElementHelper::arrayToSelectOptions(Newsletter::findAll())))
             ->addDropdown(
-            'Newsletter list',
-            'newsletterListId',
+                'Newsletter list',
+                'newsletterListId',
                 (new Attributes())
                     ->setReadonly(true)
                     ->setOptions(ElementHelper::arrayToSelectOptions(NewsletterList::findAll())))
             ->addText('Date sending', 'dateSending', (new Attributes())->setReadonly(true))
-            ->addText('Date sent', 'dateSent',(new Attributes())->setReadonly(true))
-            ->addText('Date opened', 'dateOpened',(new Attributes())->setReadonly(true))
-            ->addText('Subject', 'subject',(new Attributes())->setReadonly(true))
-            ->addText('Job Queue id', 'jobId',(new Attributes())->setReadonly(true))
-        ;
+            ->addText('Date sent', 'dateSent', (new Attributes())->setReadonly(true))
+            ->addText('Date opened', 'dateOpened', (new Attributes())->setReadonly(true))
+            ->addText('Subject', 'subject', (new Attributes())->setReadonly(true))
+            ->addText('Job Queue id', 'jobId', (new Attributes())->setReadonly(true));
 
         return $this;
     }

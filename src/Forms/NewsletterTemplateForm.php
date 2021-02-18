@@ -29,8 +29,7 @@ class NewsletterTemplateForm extends AbstractFormWithRepository
                     ->setOptions(ElementHelper::modelIteratorToOptions($this->repositories->language->findAll())
                     ))
             ->addEditor('template', 'template', (new Attributes())->setRequired(true))
-            ->addSubmitButton('%CORE_SAVE%')
-        ;
+            ->addSubmitButton('%CORE_SAVE%');
 
         return $this;
     }

@@ -23,7 +23,8 @@ class NewsletterRepository
         return null;
     }
 
-    public function findAll(?FindValueIterator $findValues = null, bool $hideUnpublished = true): NewsletterIterator {
+    public function findAll(?FindValueIterator $findValues = null, bool $hideUnpublished = true): NewsletterIterator
+    {
         Newsletter::setFindPublished($hideUnpublished);
         Newsletter::addFindOrder('name');
         $this->parsefindValues($findValues);

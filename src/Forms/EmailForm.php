@@ -12,7 +12,7 @@ use VitesseCms\Media\Enums\AssetsEnum;
 
 class EmailForm extends AbstractForm
 {
-    public function initialize():void
+    public function initialize(): void
     {
         $options = [];
         $modules = SystemUtil::getModules($this->configuration);
@@ -26,8 +26,8 @@ class EmailForm extends AbstractForm
                 );
                 $functions = FileUtil::getFunctions($controllerPath, $this->configuration);
                 foreach ($functions as $function) :
-                    $function = str_replace('Action','',$function);
-                    $options[strtolower($moduleName.$controllerName.$function)] = $moduleName.' - '.$controllerName.' - '.$function;
+                    $function = str_replace('Action', '', $function);
+                    $options[strtolower($moduleName . $controllerName . $function)] = $moduleName . ' - ' . $controllerName . ' - ' . $function;
                 endforeach;
             endforeach;
         endforeach;

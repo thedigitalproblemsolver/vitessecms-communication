@@ -47,8 +47,7 @@ class AdminnewsletterqueueController extends AbstractAdminController implements 
             if (NewsletterQueueHelper::send($newsletterQueue, $this->setting, $this->view)) :
                 $newsletterQueue->setDateSent($now->format('Y-m-d H:i:s'))
                     ->setPublished(true)
-                    ->save()
-                ;
+                    ->save();
                 $this->flash->setSucces('NEWSLETTER_SEND');
             else :
                 $this->flash->setError('Newsletter not send');

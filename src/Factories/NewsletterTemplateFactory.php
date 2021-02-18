@@ -12,12 +12,12 @@ class NewsletterTemplateFactory
         Language $language,
         string $template,
         bool $published = false
-    ): NewsletterTemplate {
+    ): NewsletterTemplate
+    {
         return (new NewsletterTemplate())
             ->setName($name)
             ->setLanguage((string)$language->getId())
             ->setTemplate($template)
-            ->setPublished($published)
-        ;
+            ->setPublished($published);
     }
 }

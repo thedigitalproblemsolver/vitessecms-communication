@@ -49,7 +49,8 @@ class MailchimpService
         SettingService $setting,
         UrlService $url,
         ConfigService $configuration
-    ) {
+    )
+    {
         $this->session = $session;
         $this->setting = $setting;
         $this->url = $url;
@@ -95,9 +96,9 @@ class MailchimpService
         $this->storeId = $storeId;
 
         return $this->mailchimp->post('/ecommerce/stores', [
-            'id'            => $storeId,
-            'list_id'       => $listId,
-            'name'          => $name,
+            'id' => $storeId,
+            'list_id' => $listId,
+            'name' => $name,
             'currency_code' => 'EUR',
         ]);
     }
@@ -116,23 +117,23 @@ class MailchimpService
 
         //$this->createProduct();
 
-        return $this->mailchimp->post('/ecommerce/stores/'.$this->storeId.'/orders', [
-            'id'            => (string)$order->getNumber(),
-            'customer'      => [
-                'id'            => $shopper['userId'],
+        return $this->mailchimp->post('/ecommerce/stores/' . $this->storeId . '/orders', [
+            'id' => (string)$order->getNumber(),
+            'customer' => [
+                'id' => $shopper['userId'],
                 'email_address' => $user['email'],
                 'opt_in_status' => false,
             ],
-            'campaign_id'   => $mailchimpCampaignId,
+            'campaign_id' => $mailchimpCampaignId,
             'currency_code' => 'EUR',
-            'order_total'   => $order->getTotal(),
-            'lines'         => [
+            'order_total' => $order->getTotal(),
+            'lines' => [
                 [
-                    'id'                 => '1',
-                    'product_id'         => '1',
+                    'id' => '1',
+                    'product_id' => '1',
                     'product_variant_id' => '1',
-                    'quantity'           => 1,
-                    'price'              => 1,
+                    'quantity' => 1,
+                    'price' => 1,
                 ],
             ],
         ]);
@@ -141,43 +142,43 @@ class MailchimpService
     public function createProduct(Item $item): array
     {
         return (array)$this->mailchimp->post(
-            '/ecommerce/stores/'.$this->storeId.'/products',
+            '/ecommerce/stores/' . $this->storeId . '/products',
             $this->createProductFromItem($item)
         );
+    }
+
+    protected function createProductFromItem(Item $item): array
+    {
+        return [
+            'id' => (string)$item->getId(),
+            'title' => $item->_('name'),
+            'url' => $this->url->getBaseUri() . $item->_('slug'),
+            'image_url' => $this->configuration->getUploadUri() . $item->_('image'),
+            'variants' => [
+                [
+                    'id' => (string)$item->getId(),
+                    'title' => $item->_('name'),
+                    'price' => $item->_('price_sale'),
+                ],
+            ],
+        ];
     }
 
     public function updateProduct(Item $item): array
     {
         return (array)$this->mailchimp->patch(
-            '/ecommerce/stores/'.$this->storeId.'/products/'.$item->getId(),
+            '/ecommerce/stores/' . $this->storeId . '/products/' . $item->getId(),
             $this->createProductFromItem($item)
         );
     }
 
     public function getProductById(string $id): array
     {
-        return (array)$this->mailchimp->get('/ecommerce/stores/'.$this->storeId.'/products/'.$id);
+        return (array)$this->mailchimp->get('/ecommerce/stores/' . $this->storeId . '/products/' . $id);
     }
 
     public function getStores(): array
     {
         return (array)$this->mailchimp->get('/ecommerce/stores/');
-    }
-
-    protected function createProductFromItem(Item $item): array
-    {
-        return [
-            'id'        => (string)$item->getId(),
-            'title'     => $item->_('name'),
-            'url'       => $this->url->getBaseUri().$item->_('slug'),
-            'image_url' => $this->configuration->getUploadUri().$item->_('image'),
-            'variants'  => [
-                [
-                    'id'    => (string)$item->getId(),
-                    'title' => $item->_('name'),
-                    'price' => $item->_('price_sale'),
-                ],
-            ],
-        ];
     }
 }

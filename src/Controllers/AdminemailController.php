@@ -26,14 +26,14 @@ class AdminemailController extends AbstractAdminController implements Repositori
 
     public function sendPreviewAction(string $id): void
     {
-        if($this->user->getId()) :
+        if ($this->user->getId()) :
             $email = $this->repositories->email->getById($id);
             $this->mailer->sendMail(
                 $this->user->getEmail(),
                 $email->getSubjectField(),
                 $email->getBodyField()
             );
-            $this->flash->setSucces('Preview email is send to '. $this->user->_('email'));
+            $this->flash->setSucces('Preview email is send to ' . $this->user->_('email'));
         endif;
 
         $this->redirect();

@@ -34,9 +34,9 @@ class AdminnewsletterControllerListener
             'newsletterAdminListItem',
             'admin/',
             [
-                'newsletter'    => $newsletter,
+                'newsletter' => $newsletter,
                 'languageShort' => $language ? $language->getShortCode() : '',
-                'listSortable'  => $controller->isListSortable(),
+                'listSortable' => $controller->isListSortable(),
             ]
         ));
     }

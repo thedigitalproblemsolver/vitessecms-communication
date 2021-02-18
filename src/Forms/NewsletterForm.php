@@ -46,12 +46,6 @@ class NewsletterForm extends AbstractFormWithRepository
         return $this;
     }
 
-    public function setEntity($entity)
-    {
-        parent::setEntity($entity);
-        $this->item = $entity;
-    }
-
     protected function buildParentForm(): void
     {
         $showSendNewsletterList = false;
@@ -92,26 +86,6 @@ class NewsletterForm extends AbstractFormWithRepository
                 $this->addButton('Place newsletter in  queue', 'queueNewsletter');
             endif;
         endif;
-    }
-
-    protected function buildChildForm(): void
-    {
-        $parentNewsletter = $this->repositories->newsletter->getById($this->item->getParentId());
-        $this->item->setLanguage($parentNewsletter->getLanguage());
-        $this->item->set('list', $parentNewsletter->_('list'));
-
-        $this->addText('%CORE_NAME%', 'name', (new Attributes())->setRequired(true))
-            ->addHidden('language', $parentNewsletter->getLanguage())
-            ->addHidden('list', $parentNewsletter->getList());
-
-        if ($this->item !== null && $this->item->getLanguage() !== null) :
-            $this->setBodyText();
-        endif;
-
-        $this->addNumber('days after previous mail', 'days')
-            ->addTime('Sendtime', 'sendTime')
-            ->addSubmitButton('%CORE_SAVE%')
-            ->addHtml('<span id="newsletterId" style="display:none">' . $this->item->getId() . '</span>');
     }
 
     protected function setBodyText(): void
@@ -176,5 +150,31 @@ class NewsletterForm extends AbstractFormWithRepository
 
         $this->addEmail('Send preview to', 'previewEmail')
             ->addButton('Send preview', 'sendPreviewEmail');
+    }
+
+    protected function buildChildForm(): void
+    {
+        $parentNewsletter = $this->repositories->newsletter->getById($this->item->getParentId());
+        $this->item->setLanguage($parentNewsletter->getLanguage());
+        $this->item->set('list', $parentNewsletter->_('list'));
+
+        $this->addText('%CORE_NAME%', 'name', (new Attributes())->setRequired(true))
+            ->addHidden('language', $parentNewsletter->getLanguage())
+            ->addHidden('list', $parentNewsletter->getList());
+
+        if ($this->item !== null && $this->item->getLanguage() !== null) :
+            $this->setBodyText();
+        endif;
+
+        $this->addNumber('days after previous mail', 'days')
+            ->addTime('Sendtime', 'sendTime')
+            ->addSubmitButton('%CORE_SAVE%')
+            ->addHtml('<span id="newsletterId" style="display:none">' . $this->item->getId() . '</span>');
+    }
+
+    public function setEntity($entity)
+    {
+        parent::setEntity($entity);
+        $this->item = $entity;
     }
 }

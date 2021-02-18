@@ -78,6 +78,13 @@ class Newsletter extends AbstractCollection
         return $this->template;
     }
 
+    public function setTemplate(?string $template): Newsletter
+    {
+        $this->template = $template;
+
+        return $this;
+    }
+
     public function getBody(): ?string
     {
         return $this->body;
@@ -93,6 +100,13 @@ class Newsletter extends AbstractCollection
     public function getSubject(): ?string
     {
         return $this->subject;
+    }
+
+    public function setSubject(string $subject): Newsletter
+    {
+        $this->subject = $subject;
+
+        return $this;
     }
 
     public function setHasChildren(bool $value): Newsletter
@@ -122,20 +136,6 @@ class Newsletter extends AbstractCollection
     public function getEmailHeaderTargetPage(): ?string
     {
         return $this->emailHeaderTargetPage;
-    }
-
-    public function setTemplate(?string $template): Newsletter
-    {
-        $this->template = $template;
-
-        return $this;
-    }
-
-    public function setSubject(string $subject): Newsletter
-    {
-        $this->subject = $subject;
-
-        return $this;
     }
 
     public function setName(string $name): Newsletter

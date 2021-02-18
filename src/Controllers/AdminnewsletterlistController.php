@@ -60,7 +60,7 @@ class AdminnewsletterlistController extends AbstractAdminController implements R
 
     public function parseImportFormAction(): void
     {
-        if($this->request->get('newsletterlist') && $this->request->hasFiles()) :
+        if ($this->request->get('newsletterlist') && $this->request->hasFiles()) :
             foreach ($this->request->getUploadedFiles() as $file) :
                 $name = FileUtil::sanatize($file->getName());
                 if ($file->moveTo($this->config->get('uploadDir') . $name)) :
@@ -78,8 +78,8 @@ class AdminnewsletterlistController extends AbstractAdminController implements R
             endforeach;
 
             $this->redirect(
-                $this->url->getBaseUri().
-                'admin/communication/adminnewsletterlist/edit/'.
+                $this->url->getBaseUri() .
+                'admin/communication/adminnewsletterlist/edit/' .
                 $this->request->get('newsletterlist')
             );
         endif;
@@ -89,10 +89,10 @@ class AdminnewsletterlistController extends AbstractAdminController implements R
 
     public function deleteMemberAction(string $id, int $key): void
     {
-        if($id && is_numeric($key)) :
+        if ($id && is_numeric($key)) :
             $newsletterList = $this->repositories->newsletterList->getById($id, false);
             $members = $newsletterList->getMembers();
-            if(isset($members[$key])) :
+            if (isset($members[$key])) :
                 $newsletterList->removeMember($members[$key]['email'])->save();
             endif;
             $this->flash->setSucces('Member is removed');
@@ -103,10 +103,10 @@ class AdminnewsletterlistController extends AbstractAdminController implements R
 
     public function unsubscribeMemberAction(string $id, int $key): void
     {
-        if($id && is_numeric($key)) :
+        if ($id && is_numeric($key)) :
             $newsletterList = $this->repositories->newsletterList->getById($id, false);
             $members = $newsletterList->getMembers();
-            if(isset($members[$key])) :
+            if (isset($members[$key])) :
                 $newsletterList = $newsletterList->unsubscribeMember($members[$key]['email']);
             endif;
             $newsletterList->save();
@@ -119,10 +119,10 @@ class AdminnewsletterlistController extends AbstractAdminController implements R
 
     public function subscribeMemberAction(string $id, int $key): void
     {
-        if($id && is_numeric($key)) :
+        if ($id && is_numeric($key)) :
             $newsletterList = $this->repositories->newsletterList->getById($id, false);
             $members = $newsletterList->getMembers();
-            if(isset($members[$key])) :
+            if (isset($members[$key])) :
                 $newsletterList = $newsletterList->subscribeMember($members[$key]['email']);
             endif;
             $newsletterList->save();

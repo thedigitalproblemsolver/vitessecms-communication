@@ -27,21 +27,22 @@ class NewsletterQueueHelper
         NewsletterQueue $newsletterQueue,
         SettingService $setting,
         ViewService $view
-    ): bool {
+    ): bool
+    {
         $view->set(
             'sendMailAfterFooter',
             '{UNSUBSCRIBE}%NEWSLETTER_UNSUBSCRIBE%{/UNSUBSCRIBE}
-            <img src="'.$view->getVar('BASE_URI').'communication/newsletterqueue/opened/'.
-            (string)$newsletterQueue->getId().'"
+            <img src="' . $view->getVar('BASE_URI') . 'communication/newsletterqueue/opened/' .
+            (string)$newsletterQueue->getId() . '"
              style="width:1px;height:1px" 
-             alt="'.$setting->get('WEBSITE_DEFAULT_NAME').'" />'
+             alt="' . $setting->get('WEBSITE_DEFAULT_NAME') . '" />'
         );
         Newsletter::setFindPublished(false);
         $newsletter = Newsletter::findById($newsletterQueue->_('newsletterId'));
         $view->set('sendMailHeaderImage', $newsletter->_('emailHeaderImage'));
         $view->set('sendMailMotto', $newsletter->_('motto'));
-        if($newsletter->_('emailHeaderTargetPage')) :
-            $view->set('sendMailHeaderUrl', 'page:'.$newsletter->_('emailHeaderTargetPage'));
+        if ($newsletter->_('emailHeaderTargetPage')) :
+            $view->set('sendMailHeaderUrl', 'page:' . $newsletter->_('emailHeaderTargetPage'));
         endif;
 
         UtmUtil::setSource('newsletter');
@@ -49,18 +50,18 @@ class NewsletterQueueHelper
         UtmUtil::setCampaign($newsletterQueue->_('subject'));
 
         $component = new Component();
-        $component->content->addEventInput('newsletterQueueId',(string)$newsletterQueue->getId());
-        if(MongoUtil::isObjectId($newsletterQueue->_('userId'))) :
-            $component->content->addEventInput('userId',$newsletterQueue->_('userId'));
+        $component->content->addEventInput('newsletterQueueId', (string)$newsletterQueue->getId());
+        if (MongoUtil::isObjectId($newsletterQueue->_('userId'))) :
+            $component->content->addEventInput('userId', $newsletterQueue->_('userId'));
         else :
             User::setFindValue('email', $newsletterQueue->_('email'));
             $user = User::findFirst();
-            if($user) :
-                $component->content->addEventInput('userId',(string)$user->getId());
+            if ($user) :
+                $component->content->addEventInput('userId', (string)$user->getId());
             endif;
         endif;
 
-        return (bool) $component->mailer->prepareMail(
+        return (bool)$component->mailer->prepareMail(
             trim($newsletterQueue->_('email')),
             $newsletterQueue->_('subject'),
             $newsletterQueue->_('body'),
@@ -73,21 +74,22 @@ class NewsletterQueueHelper
         Newsletter $newsletter,
         ?DateTime $referenceTime = null,
         ?array $newMember = null
-    ): void {
+    ): void
+    {
         $newsletterList = NewsletterList::findById($newsletter->_('list'));
         $jobOptions = [];
-        if($newsletter->_('sendDate') && $newsletter->_('sendTime')) :
+        if ($newsletter->_('sendDate') && $newsletter->_('sendTime')) :
             $diffInSeconds = strtotime(
-                $newsletter->_('sendDate').' '.
-                $newsletter->_('sendTime')
-            ) - (new \DateTime())->getTimestamp();
+                    $newsletter->_('sendDate') . ' ' .
+                    $newsletter->_('sendTime')
+                ) - (new \DateTime())->getTimestamp();
             $jobOptions['delay'] = $diffInSeconds;
-        elseif($referenceTime !== null) :
+        elseif ($referenceTime !== null) :
             $diffInSeconds = $referenceTime->getTimestamp() - (new \DateTime())->getTimestamp();
             $jobOptions['delay'] = $diffInSeconds;
         endif;
 
-        if($newMember) :
+        if ($newMember) :
             $members[] = $newMember;
         else :
             $members = (array)$newsletterList->_('members');
@@ -117,7 +119,7 @@ class NewsletterQueueHelper
                     $newsletterQueue->setId(new ObjectId());
                     $request = new Request();
                     $router = new RouterService(
-                        $user ? $user: new User(),
+                        $user ? $user : new User(),
                         $request,
                         Di::getDefault()->get('configuration'),
                         Di::getDefault()->get('url'),
@@ -130,7 +132,7 @@ class NewsletterQueueHelper
                             'module' => 'communication',
                             'controller' => 'adminnewsletterqueue',
                             'action' => 'sendqueuednewsletter',
-                            'params'  => [
+                            'params' => [
                                 (string)$newsletterQueue->getId()
                             ]
                         ]
@@ -140,7 +142,7 @@ class NewsletterQueueHelper
                     $jobId = Di::getDefault()->get('jobQueue')->create(
                         $router,
                         $request,
-                        $user?$user:null,
+                        $user ? $user : null,
                         $jobOptions
                     );
                     $newsletterQueue->set('jobId', $jobId);
@@ -149,22 +151,23 @@ class NewsletterQueueHelper
             endif;
         endforeach;
     }
-    
+
     public static function removeByNewsletterList(
         NewsletterList $newsletterList,
         string $email,
         bool $removeAll = false
-    ): void {
+    ): void
+    {
         NewsletterQueue::setFindValue('email', $email);
         NewsletterQueue::setFindValue('newsletterListId', (string)$newsletterList->getId());
         NewsletterQueue::setFindPublished(false);
-        if(!$removeAll) :
+        if (!$removeAll) :
             NewsletterQueue::setFindValue('dateSent', null);
         endif;
         $newsletterQueues = NewsletterQueue::findAll();
 
         foreach ($newsletterQueues as $newsletterQueue) :
-            if($newsletterQueue->_('jobId')) :
+            if ($newsletterQueue->_('jobId')) :
                 JobQueue::setFindPublished(false);
                 JobQueue::setFindValue('jobId', $newsletterQueue->_('jobId'));
                 JobQueue::setFindValue(
@@ -173,12 +176,12 @@ class NewsletterQueueHelper
                     'like'
                 );
                 $jobQueue = JobQueue::findFirst();
-                if($jobQueue) {
+                if ($jobQueue) {
                     $jobQueue->delete();
                 }
                 /** @var Job $jobQueue */
                 $jobQueue = Di::getDefault()->get('jobQueue')->jobPeek($newsletterQueue->_('jobId'));
-                if($jobQueue) {
+                if ($jobQueue) {
                     $jobQueue->delete();
                 }
             endif;

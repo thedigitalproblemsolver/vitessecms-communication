@@ -11,19 +11,19 @@ class NewsletterlistController extends AbstractController implements Repositorie
 {
     public function addmemberAction(): void
     {
-        if(
+        if (
             is_string($this->request->get('newsletterList'))
             && $this->request->get('email')
-            && ( $this->request->isAjax() || $this->request->isPost() )
+            && ($this->request->isAjax() || $this->request->isPost())
         ) :
             $hasErrors = false;
-            if($this->request->isPost() && !empty($this->request->getPost('block'))) :
+            if ($this->request->isPost() && !empty($this->request->getPost('block'))) :
                 $post = $this->request->getPost();
                 $blockFormBuilder = $this->repositories->blockFormBuilder->getById(
                     $this->request->getPost('block'),
                     $this->view
                 );
-                if(
+                if (
                     $blockFormBuilder !== null
                     && $blockFormBuilder->isUseRecaptcha()
                     && !FormUtil::hasValidRecaptcha($post)
@@ -32,11 +32,11 @@ class NewsletterlistController extends AbstractController implements Repositorie
                 endif;
             endif;
 
-            if(!$hasErrors) {
+            if (!$hasErrors) {
                 $newsletterLists = explode(',', $this->request->get('newsletterList'));
                 foreach ($newsletterLists as $newsletterListId) :
                     $newsletterList = $this->repositories->newsletterList->getById($newsletterListId);
-                    if($newsletterList !== null ):
+                    if ($newsletterList !== null):
                         $newsletterList->addMember($this->request->get('email'))->save();
                     endif;
                 endforeach;
@@ -49,11 +49,11 @@ class NewsletterlistController extends AbstractController implements Repositorie
 
     public function unsubscribeAction(string $newsletterListId): void
     {
-        if($this->user->isLoggedIn()) :
+        if ($this->user->isLoggedIn()) :
             $newsletterList = $this->repositories->newsletterList->getById($newsletterListId);
-            if($newsletterList !== null ):
+            if ($newsletterList !== null):
                 $newsletterList->unsubscribeMember($this->user->getEmail())->save();
-                $this->flash->setSucces('NEWSLETTER_UNSUBSCRIBE_SUCCESS','success',[$newsletterList->_('name')]);
+                $this->flash->setSucces('NEWSLETTER_UNSUBSCRIBE_SUCCESS', 'success', [$newsletterList->_('name')]);
             endif;
         endif;
 
@@ -62,11 +62,11 @@ class NewsletterlistController extends AbstractController implements Repositorie
 
     public function subscribeAction(string $newsletterListId): void
     {
-        if($this->user->isLoggedIn()) :
+        if ($this->user->isLoggedIn()) :
             $newsletterList = $this->repositories->newsletterList->getById($newsletterListId);
-            if($newsletterList !== null) :
+            if ($newsletterList !== null) :
                 $newsletterList->subscribeMember($this->user->getEmail())->save();
-                $this->flash->setSucces('NEWSLETTER_SUBSCRIBE_SUCCESS','success',[$newsletterList->_('name')]);
+                $this->flash->setSucces('NEWSLETTER_SUBSCRIBE_SUCCESS', 'success', [$newsletterList->_('name')]);
             endif;
         endif;
 

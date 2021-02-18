@@ -12,7 +12,6 @@ class NewsletterListFactory
         return (new NewsletterList())
             ->setName($name)
             ->setLanguage((string)$language->getId())
-            ->setPublished($published)
-        ;
+            ->setPublished($published);
     }
 }

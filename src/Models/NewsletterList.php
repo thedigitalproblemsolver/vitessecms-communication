@@ -14,30 +14,31 @@ class NewsletterList extends AbstractCollection
      * @var array
      */
     public $members;
-
+    /**
+     * @var string
+     */
+    public $name;
+    /**
+     * @var string
+     */
+    public $language;
     /**
      * @var string
      */
     protected $dataHtml;
-
     /**
      * @var string
      */
     protected $addEmail;
 
-    /**
-     * @var string
-     */
-    public $name;
-
-    /**
-     * @var string
-     */
-    public $language;
-
     public function onConstruct()
     {
         $this->members = [];
+    }
+
+    public function getDataHtml(): ?string
+    {
+        return $this->dataHtml;
     }
 
     public function setDataHtml(string $dataHtml): NewsletterList
@@ -45,11 +46,6 @@ class NewsletterList extends AbstractCollection
         $this->dataHtml = $dataHtml;
 
         return $this;
-    }
-
-    public function getDataHtml(): ?string
-    {
-        return $this->dataHtml;
     }
 
     public function getAddEmail(): string
@@ -94,7 +90,7 @@ class NewsletterList extends AbstractCollection
             $this->di->log->write(
                 $this->getId(),
                 __CLASS__,
-                'Added '.$email.' to '.$this->_('name')
+                'Added ' . $email . ' to ' . $this->_('name')
             );
         endif;
 
@@ -128,7 +124,7 @@ class NewsletterList extends AbstractCollection
         $this->di->log->write(
             $this->getId(),
             __CLASS__,
-            'Subscribe '.$email.' from '.$this->_('name').' by admin'
+            'Subscribe ' . $email . ' from ' . $this->_('name') . ' by admin'
         );
 
         return $this;
@@ -163,7 +159,7 @@ class NewsletterList extends AbstractCollection
         $this->di->log->write(
             $this->getId(),
             __CLASS__,
-            'Unsubscribe '.$email.' from '.$this->_('name')
+            'Unsubscribe ' . $email . ' from ' . $this->_('name')
         );
 
         return $this;
@@ -198,7 +194,7 @@ class NewsletterList extends AbstractCollection
         $this->di->log->write(
             $this->getId(),
             __CLASS__,
-            'Removed '.$email.' from '.$this->_('name')
+            'Removed ' . $email . ' from ' . $this->_('name')
         );
 
         return $this;

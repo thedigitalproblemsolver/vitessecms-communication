@@ -16,19 +16,19 @@ class AdminemailControllerListener
     {
         $email->setAdminListExtra($controller->view->renderTemplate(
             'emailAdminListItem',
-            $controller->configuration->getVendorNameDir().'communication/src/Resources/views/admin/',
+            $controller->configuration->getVendorNameDir() . 'communication/src/Resources/views/admin/',
             ['email' => $email]
         ));
 
         if (PermissionUtils::check(
             $controller->user,
-            $controller->view->getVar('aclModulePrefix').'communication',
+            $controller->view->getVar('aclModulePrefix') . 'communication',
             'adminemail',
             'sendPreview'
         )) :
             $email->setExtraAdminListButtons(Tag::linkTo([
-                'action' => '/Admin/communication/adminemail/sendPreview/'.$email->getId(),
-                'class'  => 'fa fa-envelope',
+                'action' => '/Admin/communication/adminemail/sendPreview/' . $email->getId(),
+                'class' => 'fa fa-envelope',
             ]));
         endif;
     }
@@ -41,7 +41,7 @@ class AdminemailControllerListener
     {
         $form->addText(
             'Subject',
-            'filter[subject.'. $form->configuration->getLanguageShort() .']'
+            'filter[subject.' . $form->configuration->getLanguageShort() . ']'
         );
         $form->addPublishedField($form);
 
