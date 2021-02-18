@@ -12,8 +12,7 @@ class AdminMenuListener
     {
         if ($adminMenu->getUser()->getPermissionRole() === 'superadmin') :
             $children = new AdminMenuNavBarChildren();
-            $children->addChild('Form submissions', 'admin/form/adminsubmission/adminList')
-                ->addChild('System E-mails', 'admin/communication/adminemail/adminList')
+            $children->addChild('System E-mails', 'admin/communication/adminemail/adminList')
                 ->addChild('Newsletter lists', 'admin/communication/adminnewsletterlist/adminList')
                 ->addChild('Newsletter template', 'admin/communication/adminnewslettertemplate/adminList')
                 ->addChild('Newsletter', 'admin/communication/adminnewsletter/adminList')
