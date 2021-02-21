@@ -18,19 +18,19 @@
     }
   },
   "require": {
-    "vitessecms/export": "~0.0.7",
-    "vitessecms/configuration": "~0.0.7",
+    "vitessecms/export": "~0.0.8",
+    "vitessecms/configuration": "~0.0.9",
     "drewm/mailchimp-api": "^2.5",
     "phalcon/incubator": "3.2.6",
-    "vitessecms/language": "~0.0.1",
-    "vitessecms/media": "~0.0.2",
-    "vitessecms/sef": "~0.0.1",
-    "vitessecms/setting": "~0.0.5",
-    "vitessecms/user": "~0.0.3",
-    "vitessecms/core": "~0.0.6",
-    "vitessecms/form": "~0.0.8",
-    "vitessecms/datafield": "~0.0.5",
-    "vitessecms/datagroup": "~0.0.1",
-    "vitessecms/job": "~0.0.2"
+    "vitessecms/language": "~0.0.2",
+    "vitessecms/media": "~0.0.3",
+    "vitessecms/sef": "~0.0.2",
+    "vitessecms/setting": "~0.0.7",
+    "vitessecms/user": "~0.0.6",
+    "vitessecms/core": "~0.0.7",
+    "vitessecms/form": "~0.0.9",
+    "vitessecms/datafield": "~0.0.6",
+    "vitessecms/datagroup": "~0.0.2",
+    "vitessecms/job": "~0.0.5"
   }
 }
