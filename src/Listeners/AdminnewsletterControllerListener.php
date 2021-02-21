@@ -24,6 +24,13 @@ class AdminnewsletterControllerListener
         endif;
     }
 
+    public function beforePostBinding(Event $event, AdminnewsletterController $controller, Newsletter $newsletter): void
+    {
+        if (empty($controller->request->get('emailHeaderImage'))) :
+            unset($_POST['emailHeaderImage']);
+        endif;
+    }
+
     public function adminListItem(Event $event, AdminnewsletterController $controller, Newsletter $newsletter): void
     {
         $language = $controller->repositories->language->getById(

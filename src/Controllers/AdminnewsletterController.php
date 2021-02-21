@@ -75,13 +75,6 @@ class AdminnewsletterController extends AbstractAdminController implements Repos
         parent::redirect();
     }
 
-    public function beforeSave(AbstractCollection $item)
-    {
-        if (empty($this->request->get('emailHeaderImage'))) :
-            unset($_POST['emailHeaderImage']);
-        endif;
-    }
-
     public function afterSave(AbstractCollection $newsletter): void
     {
         if ($newsletter->getParentId() !== null) :
