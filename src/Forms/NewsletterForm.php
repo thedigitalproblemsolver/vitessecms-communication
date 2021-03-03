@@ -166,7 +166,7 @@ class NewsletterForm extends AbstractFormWithRepository
             $this->setBodyText();
         endif;
 
-        $this->addNumber('days after previous mail', 'days')
+        $this->addNumber('days after previous mail', 'days', (new Attributes())->setMin(0)->setStep(1))
             ->addTime('Sendtime', 'sendTime')
             ->addSubmitButton('%CORE_SAVE%')
             ->addHtml('<span id="newsletterId" style="display:none">' . $this->item->getId() . '</span>');
