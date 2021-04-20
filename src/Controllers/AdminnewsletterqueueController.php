@@ -2,6 +2,7 @@
 
 namespace VitesseCms\Communication\Controllers;
 
+use DateTime;
 use VitesseCms\Communication\Forms\NewsletterQueueForm;
 use VitesseCms\Communication\Helpers\NewsletterQueueHelper;
 use VitesseCms\Communication\Repositories\RepositoriesInterface;
@@ -41,7 +42,7 @@ class AdminnewsletterqueueController extends AbstractAdminController implements 
     {
         $newsletterQueue = $this->repositories->newsletterQueue->getById($id, false);
         if ($newsletterQueue !== null) :
-            $now = new \DateTime();
+            $now = new DateTime();
             $newsletterQueue->setDateSending($now->format('Y-m-d H:i:s'))->save();
 
             if (NewsletterQueueHelper::send($newsletterQueue, $this->setting, $this->view)) :

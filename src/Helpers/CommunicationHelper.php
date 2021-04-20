@@ -8,6 +8,8 @@ use VitesseCms\Database\AbstractCollection;
 use VitesseCms\Core\Factories\LogFactory;
 use Phalcon\Di;
 use Phalcon\Mvc\Router;
+use function count;
+use function is_string;
 
 class CommunicationHelper
 {
@@ -54,12 +56,12 @@ class CommunicationHelper
             Email::setFindValue('state', $systemMailState);
             Email::setFindValue('systemAction', $systemAction);
             $emails = Email::findAll();
-            if (\count($emails) > 0) :
+            if (count($emails) > 0) :
                 /** @var AbstractCollection $email */
                 foreach ($emails as $email) :
                     $realToAddress = $toAddress;
                     if (
-                        \is_string($email->_('recipient'))
+                        is_string($email->_('recipient'))
                         && !empty($email->_('recipient'))
                     ) :
                         $realToAddress = $email->_('recipient');
@@ -73,7 +75,7 @@ class CommunicationHelper
                     );
                     if (
                         $sendResult
-                        && \is_string($email->_('messageSuccess'))
+                        && is_string($email->_('messageSuccess'))
                         && $email->_('messageSuccess')
                     ) :
                         Di::getDefault()->get('flash')->success($email->_('messageSuccess'));
@@ -83,7 +85,7 @@ class CommunicationHelper
                             'Email send successfull : ' . $email->_('subject') . ' to ' . $realToAddress
                         )->save();
                     elseif (
-                        \is_string($email->_('messageError'))
+                        is_string($email->_('messageError'))
                         && $email->_('messageError')
                     ) :
                         Di::getDefault()->get('flash')->error($email->_('messageError'));

@@ -2,9 +2,10 @@
 
 namespace VitesseCms\Communication\Models;
 
+use ArrayIterator;
 use VitesseCms\Database\AbstractCollection;
 
-class NewsletterTemplateIterator extends \ArrayIterator
+class NewsletterTemplateIterator extends ArrayIterator
 {
     public function __construct(array $newsletterLists)
     {

@@ -2,6 +2,7 @@
 
 namespace VitesseCms\Communication\Helpers;
 
+use DateTime;
 use VitesseCms\Communication\Factories\NewsletterListMemberFactory;
 use VitesseCms\Communication\Models\Newsletter;
 use VitesseCms\Communication\Models\NewsletterList;
@@ -20,7 +21,7 @@ class NewsletterHelper
             if ($newsletter->_('sendAfterSubscribtion')) {
                 self::queueMembers(
                     $newsletter,
-                    NewsletterListMemberFactory::create($email, new \DateTime(), $newsletterList)
+                    NewsletterListMemberFactory::create($email, new DateTime(), $newsletterList)
                 );
             }
         endif;
@@ -39,7 +40,7 @@ class NewsletterHelper
                 new FindValueIterator([new FindValue('parentId', (string)$newsletter->getId())])
             );
 
-            $referenceTime = new \DateTime();
+            $referenceTime = new DateTime();
             while ($childNewsletters->valid()) :
                 $childNewsletter = $childNewsletters->current();
                 if ($childNewsletter->getDays() !== null) :

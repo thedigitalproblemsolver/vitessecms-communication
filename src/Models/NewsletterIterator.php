@@ -2,7 +2,9 @@
 
 namespace VitesseCms\Communication\Models;
 
-class NewsletterIterator extends \ArrayIterator
+use ArrayIterator;
+
+class NewsletterIterator extends ArrayIterator
 {
     public function __construct(array $newsletters)
     {

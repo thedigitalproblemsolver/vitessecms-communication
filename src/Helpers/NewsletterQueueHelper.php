@@ -82,10 +82,10 @@ class NewsletterQueueHelper
             $diffInSeconds = strtotime(
                     $newsletter->_('sendDate') . ' ' .
                     $newsletter->_('sendTime')
-                ) - (new \DateTime())->getTimestamp();
+                ) - (new DateTime())->getTimestamp();
             $jobOptions['delay'] = $diffInSeconds;
         elseif ($referenceTime !== null) :
-            $diffInSeconds = $referenceTime->getTimestamp() - (new \DateTime())->getTimestamp();
+            $diffInSeconds = $referenceTime->getTimestamp() - (new DateTime())->getTimestamp();
             $jobOptions['delay'] = $diffInSeconds;
         endif;
 

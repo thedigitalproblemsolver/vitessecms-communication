@@ -39,7 +39,7 @@ class AdminnewsletterlistControllerListener
         $link = $controller->url->getBaseUri() .
             'admin/' .
             $controller->router->getModuleName() .
-            '/' . $controller->router->getControllerName();;
+            '/' . $controller->router->getControllerName();
         $dataHtml = $controller->view->renderTemplate(
             'adminNewsletterListMembers',
             $controller->configuration->getVendorNameDir() . 'communication/src/Resources/views/admin/',
