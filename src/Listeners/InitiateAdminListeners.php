@@ -3,6 +3,7 @@
 namespace VitesseCms\Communication\Listeners;
 
 use Phalcon\Events\Manager;
+use VitesseCms\Communication\Blocks\NewsletterSubscribe;
 use VitesseCms\Communication\Controllers\AdminemailController;
 use VitesseCms\Communication\Controllers\AdminnewsletterController;
 use VitesseCms\Communication\Controllers\AdminnewsletterlistController;
@@ -19,5 +20,6 @@ class InitiateAdminListeners
         $eventsManager->attach(AdminnewsletterlistController::class, new AdminnewsletterlistControllerListener());
         $eventsManager->attach(AdminemailController::class, new AdminemailControllerListener());
         $eventsManager->attach(AdminnewslettertemplateController::class, new AdminnewsletterTemplateControllerListener());
+        $eventsManager->attach(NewsletterSubscribe::class, new BlockNewsletterSubscribeListener());
     }
 }
