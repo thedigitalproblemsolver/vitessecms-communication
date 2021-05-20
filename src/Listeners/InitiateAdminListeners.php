@@ -3,6 +3,7 @@
 namespace VitesseCms\Communication\Listeners;
 
 use Phalcon\Events\Manager;
+use VitesseCms\Communication\Blocks\MailchimpInitialize;
 use VitesseCms\Communication\Blocks\NewsletterSubscribe;
 use VitesseCms\Communication\Controllers\AdminemailController;
 use VitesseCms\Communication\Controllers\AdminnewsletterController;
@@ -21,5 +22,6 @@ class InitiateAdminListeners
         $eventsManager->attach(AdminemailController::class, new AdminemailControllerListener());
         $eventsManager->attach(AdminnewslettertemplateController::class, new AdminnewsletterTemplateControllerListener());
         $eventsManager->attach(NewsletterSubscribe::class, new BlockNewsletterSubscribeListener());
+        $eventsManager->attach(MailchimpInitialize::class, new BlockMailchimpInitializeListener());
     }
 }
