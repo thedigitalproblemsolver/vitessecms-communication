@@ -2,11 +2,13 @@
 
 namespace VitesseCms\Communication\Models;
 
+use DateTime;
 use VitesseCms\Communication\Factories\NewsletterListMemberFactory;
 use VitesseCms\Communication\Helpers\NewsletterListHelper;
 use VitesseCms\Communication\Helpers\NewsletterQueueHelper;
 use VitesseCms\Database\AbstractCollection;
 use VitesseCms\User\Models\User;
+use function is_array;
 
 class NewsletterList extends AbstractCollection
 {
@@ -64,13 +66,13 @@ class NewsletterList extends AbstractCollection
             endif;
 
             $members = $this->_('members');
-            if (!\is_array($members)) :
+            if (!is_array($members)) :
                 $members = [];
             endif;
 
             $member = NewsletterListMemberFactory::create(
                 $email,
-                new \DateTime(),
+                new DateTime(),
                 $this,
                 $userId
             );
@@ -78,7 +80,7 @@ class NewsletterList extends AbstractCollection
 
             if ($user) :
                 $userNewsletterLists = $user->_('newsletterLists');
-                if (!\is_array($userNewsletterLists)) :
+                if (!is_array($userNewsletterLists)) :
                     $userNewsletterLists = [];
                 endif;
                 $userNewsletterLists[(string)$this->getId()] = $member;
@@ -102,14 +104,14 @@ class NewsletterList extends AbstractCollection
         $members = (array)$this->_('members');
         foreach ($members as $key => $member) :
             if ($member['email'] === $email) :
-                $members[$key]['subscribeDate'] = (new \DateTime())->format('Y-m-d H:i:s');
+                $members[$key]['subscribeDate'] = (new DateTime())->format('Y-m-d H:i:s');
                 $members[$key]['unSubscribeDate'] = null;
                 if ($member['userId']) :
                     $user = User::findById($member['userId']);
                     if ($user) :
                         $userNewsletterLists = $user->_('newsletterLists');
                         if (
-                            \is_array($userNewsletterLists)
+                            is_array($userNewsletterLists)
                             && isset($userNewsletterLists[(string)$this->getId()])
                         ) :
                             $userNewsletterLists[(string)$this->getId()] = $members[$key];
@@ -135,13 +137,13 @@ class NewsletterList extends AbstractCollection
         $members = (array)$this->_('members');
         foreach ($members as $key => $member) :
             if ($member['email'] === $email && empty($member['unSubscribeDate'])) :
-                $members[$key]['unSubscribeDate'] = (new \DateTime())->format('Y-m-d H:i:s');
+                $members[$key]['unSubscribeDate'] = (new DateTime())->format('Y-m-d H:i:s');
                 if ($member['userId']) :
                     $user = User::findById($member['userId']);
                     if ($user) :
                         $userNewsletterLists = $user->_('newsletterLists');
                         if (
-                            \is_array($userNewsletterLists)
+                            is_array($userNewsletterLists)
                             && isset($userNewsletterLists[(string)$this->getId()])
                         ) :
                             $userNewsletterLists[(string)$this->getId()] = $members[$key];
@@ -176,7 +178,7 @@ class NewsletterList extends AbstractCollection
                     if ($user) :
                         $userNewsletterLists = $user->_('newsletterLists');
                         if (
-                            \is_array($userNewsletterLists)
+                            is_array($userNewsletterLists)
                             && isset($userNewsletterLists[(string)$this->getId()])
                         ) :
                             unset($userNewsletterLists[(string)$this->getId()]);
