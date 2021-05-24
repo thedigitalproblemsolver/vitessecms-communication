@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace VitesseCms\Communication\Listeners;
+namespace VitesseCms\Communication\Listeners\Admin;
 
 use Phalcon\Events\Event;
 use VitesseCms\Admin\AbstractAdminController;
