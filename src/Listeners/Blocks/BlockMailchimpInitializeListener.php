@@ -1,17 +1,33 @@
 <?php declare(strict_types=1);
 
-namespace VitesseCms\Communication\Listeners;
+namespace VitesseCms\Communication\Listeners\Blocks;
 
 use Phalcon\Events\Event;
-use VitesseCms\Block\Models\Block;
-use VitesseCms\Communication\Blocks\MailchimpInitialize;
+use Phalcon\Http\Request;
+use Phalcon\Session\Adapter\Files as Session;
 
 class BlockMailchimpInitializeListener
 {
-    public function loadAssets(Event $event, MailchimpInitialize $mailchimpInitialize, Block $block): void
+    /**
+     * @var Request
+     */
+    private $request;
+
+    /**
+     * @var Session
+     */
+    private $session;
+
+    public function __construct(Request $request, Session $session)
     {
-        if ($block->getDi()->request->get('mc_cid')) :
-            $block->getDi()->session->set('mailchimpCampaignId', $block->getDi()->request->get('mc_cid'));
+        $this->request = $request;
+        $this->session= $session;
+    }
+
+    public function loadAssets(Event $event): void
+    {
+        if ($this->request->get('mc_cid')) :
+            $this->session->set('mailchimpCampaignId', $this->request->get('mc_cid'));
         endif;
     }
 }

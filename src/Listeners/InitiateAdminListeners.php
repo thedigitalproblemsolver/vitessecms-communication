@@ -3,13 +3,20 @@
 namespace VitesseCms\Communication\Listeners;
 
 use Phalcon\Events\Manager;
-use VitesseCms\Communication\Blocks\MailchimpInitialize;
 use VitesseCms\Communication\Blocks\NewsletterSubscribe;
 use VitesseCms\Communication\Controllers\AdminemailController;
 use VitesseCms\Communication\Controllers\AdminnewsletterController;
 use VitesseCms\Communication\Controllers\AdminnewsletterlistController;
 use VitesseCms\Communication\Controllers\AdminnewsletterqueueController;
 use VitesseCms\Communication\Controllers\AdminnewslettertemplateController;
+use VitesseCms\Communication\Listeners\Controllers\AdminemailControllerListener;
+use VitesseCms\Communication\Listeners\Admin\AdminMenuListener;
+use VitesseCms\Communication\Listeners\Controllers\AdminnewsletterControllerListener;
+use VitesseCms\Communication\Listeners\Controllers\AdminnewsletterlistControllerListener;
+use VitesseCms\Communication\Listeners\Controllers\AdminnewsletterqueueControllerListener;
+use VitesseCms\Communication\Listeners\Controllers\AdminnewsletterTemplateControllerListener;
+use VitesseCms\Communication\Listeners\Blocks\BlockNewsletterSubscribeListener;
+use VitesseCms\Communication\Repositories\NewsletterRepository;
 
 class InitiateAdminListeners
 {
@@ -21,7 +28,9 @@ class InitiateAdminListeners
         $eventsManager->attach(AdminnewsletterlistController::class, new AdminnewsletterlistControllerListener());
         $eventsManager->attach(AdminemailController::class, new AdminemailControllerListener());
         $eventsManager->attach(AdminnewslettertemplateController::class, new AdminnewsletterTemplateControllerListener());
-        $eventsManager->attach(NewsletterSubscribe::class, new BlockNewsletterSubscribeListener());
-        $eventsManager->attach(MailchimpInitialize::class, new BlockMailchimpInitializeListener());
+        $eventsManager->attach(NewsletterSubscribe::class, new BlockNewsletterSubscribeListener(
+            new NewsletterRepository()
+        ));
+
     }
 }
