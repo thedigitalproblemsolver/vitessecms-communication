@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace VitesseCms\Communication\Listeners;
+namespace VitesseCms\Communication\Listeners\Blocks;
 
 use Phalcon\Events\Event;
 use VitesseCms\Block\Forms\BlockForm;
-use VitesseCms\Block\Models\Block;
+use VitesseCms\Communication\Repositories\NewsletterRepository;
 use VitesseCms\Database\Models\FindValue;
 use VitesseCms\Database\Models\FindValueIterator;
 use VitesseCms\Form\Helpers\ElementHelper;
@@ -12,9 +12,15 @@ use VitesseCms\Form\Models\Attributes;
 
 class BlockNewsletterSubscribeListener
 {
-    public function buildBlockForm(Event $event, BlockForm $form, Block $block): void
+    private $newsletterRepository;
+
+    public function __construct(NewsletterRepository $newsletterRepository) {
+        $this->newsletterRepository = $newsletterRepository;
+    }
+
+    public function buildBlockForm(Event $event, BlockForm $form): void
     {
-        $newsletters = $block->getDi()->repositories->newsletter->findAll(new FindValueIterator(
+        $newsletters = $this->newsletterRepository->findAll(new FindValueIterator(
             [new FindValue('parentId', null)]
         ));
         $attributes = new Attributes();
