@@ -14,7 +14,7 @@ class BlockNewsletterSubscribeListener
 {
     public function buildBlockForm(Event $event, BlockForm $form, Block $block): void
     {
-        $newsletters = $block->getDi()->get('repositories')->newsletter->findAll(new FindValueIterator(
+        $newsletters = $block->getDi()->repositories->newsletter->findAll(new FindValueIterator(
             [new FindValue('parentId', null)]
         ));
         $attributes = new Attributes();

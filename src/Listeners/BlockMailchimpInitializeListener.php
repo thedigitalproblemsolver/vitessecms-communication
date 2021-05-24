@@ -10,8 +10,8 @@ class BlockMailchimpInitializeListener
 {
     public function loadAssets(Event $event, MailchimpInitialize $mailchimpInitialize, Block $block): void
     {
-        if ($block->getDI()->get('request')->get('mc_cid')) :
-            $block->getDI()->get('session')->set('mailchimpCampaignId', $block->getDI()->get('request')->get('mc_cid'));
+        if ($block->getDi()->request->get('mc_cid')) :
+            $block->getDi()->session->set('mailchimpCampaignId', $block->getDi()->request->get('mc_cid'));
         endif;
     }
 }
