@@ -2,7 +2,6 @@
 
 namespace VitesseCms\Communication\Listeners;
 
-use Phalcon\Events\Manager;
 use VitesseCms\Communication\Blocks\NewsletterSubscribe;
 use VitesseCms\Communication\Controllers\AdminemailController;
 use VitesseCms\Communication\Controllers\AdminnewsletterController;
@@ -17,18 +16,22 @@ use VitesseCms\Communication\Listeners\Controllers\AdminnewsletterqueueControlle
 use VitesseCms\Communication\Listeners\Controllers\AdminnewsletterTemplateControllerListener;
 use VitesseCms\Communication\Listeners\Blocks\BlockNewsletterSubscribeListener;
 use VitesseCms\Communication\Repositories\NewsletterRepository;
+use VitesseCms\Core\Interfaces\InitiateListenersInterface;
+use VitesseCms\Core\Interfaces\InjectableInterface;
 
-class InitiateAdminListeners
+class InitiateAdminListeners implements InitiateListenersInterface
 {
-    public static function setListeners(Manager $eventsManager): void
+    public static function setListeners(InjectableInterface $di): void
     {
-        $eventsManager->attach('adminMenu', new AdminMenuListener());
-        $eventsManager->attach(AdminnewsletterController::class, new AdminnewsletterControllerListener());
-        $eventsManager->attach(AdminnewsletterqueueController::class, new AdminnewsletterqueueControllerListener());
-        $eventsManager->attach(AdminnewsletterlistController::class, new AdminnewsletterlistControllerListener());
-        $eventsManager->attach(AdminemailController::class, new AdminemailControllerListener());
-        $eventsManager->attach(AdminnewslettertemplateController::class, new AdminnewsletterTemplateControllerListener());
-        $eventsManager->attach(NewsletterSubscribe::class, new BlockNewsletterSubscribeListener(
+        if($di->user->hasAdminAccess()):
+            $di->eventsManager->attach('adminMenu', new AdminMenuListener());
+        endif;
+        $di->eventsManager->attach(AdminnewsletterController::class, new AdminnewsletterControllerListener());
+        $di->eventsManager->attach(AdminnewsletterqueueController::class, new AdminnewsletterqueueControllerListener());
+        $di->eventsManager->attach(AdminnewsletterlistController::class, new AdminnewsletterlistControllerListener());
+        $di->eventsManager->attach(AdminemailController::class, new AdminemailControllerListener());
+        $di->eventsManager->attach(AdminnewslettertemplateController::class, new AdminnewsletterTemplateControllerListener());
+        $di->eventsManager->attach(NewsletterSubscribe::class, new BlockNewsletterSubscribeListener(
             new NewsletterRepository()
         ));
 
