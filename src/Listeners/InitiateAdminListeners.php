@@ -23,9 +23,7 @@ class InitiateAdminListeners implements InitiateListenersInterface
 {
     public static function setListeners(InjectableInterface $di): void
     {
-        if($di->user->hasAdminAccess()):
-            $di->eventsManager->attach('adminMenu', new AdminMenuListener());
-        endif;
+        $di->eventsManager->attach('adminMenu', new AdminMenuListener());
         $di->eventsManager->attach(AdminnewsletterController::class, new AdminnewsletterControllerListener());
         $di->eventsManager->attach(AdminnewsletterqueueController::class, new AdminnewsletterqueueControllerListener());
         $di->eventsManager->attach(AdminnewsletterlistController::class, new AdminnewsletterlistControllerListener());
