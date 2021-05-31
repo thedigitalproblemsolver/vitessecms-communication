@@ -8,7 +8,6 @@ use VitesseCms\Core\Utils\SystemUtil;
 use VitesseCms\Form\AbstractForm;
 use VitesseCms\Form\Helpers\ElementHelper;
 use VitesseCms\Form\Models\Attributes;
-use VitesseCms\Media\Enums\AssetsEnum;
 
 class EmailForm extends AbstractForm
 {
@@ -55,7 +54,7 @@ class EmailForm extends AbstractForm
         )->addDropdown(
             '%ADMIN_EMAIL_SYSTEM_ACTION_TRIGGER%',
             'systemAction',
-            (new Attributes())->setOptions(ElementHelper::arrayToSelectOptions($options))->setInputClass(AssetsEnum::SELECT2)
+            (new Attributes())->setOptions(ElementHelper::arrayToSelectOptions($options))->setInputClass('select2')
         )->addDropdown(
             '%ADMIN_EMAIL_SYSTEM_ACTION_RESULT_TRIGGER%',
             'state',
@@ -65,7 +64,7 @@ class EmailForm extends AbstractForm
                 'notice' => '%ADMIN_ALERT_INFO%',
                 'warning' => '%ADMIN_ALERT_WARNING%',
                 'custom' => '%ADMIN_HARD_CODED%'
-            ]))->setInputClass(AssetsEnum::SELECT2)
+            ]))->setInputClass('select2')
         )->addSubmitButton('%CORE_SAVE%');
     }
 }
