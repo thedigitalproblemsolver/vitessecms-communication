@@ -31,8 +31,8 @@
     "vitessecms/datafield": "~0.2.12",
     "vitessecms/datagroup": "~0.2.9",
     "vitessecms/job": "~0.2.1",
-    "vitessecms/block": "~0.2.13",
+    "vitessecms/block": "~0.2.14",
     "vitessecms/database": "~0.2.4",
-    "vitessecms/content": "~0.2.12"
+    "vitessecms/content": "~0.2.13"
   }
 }
