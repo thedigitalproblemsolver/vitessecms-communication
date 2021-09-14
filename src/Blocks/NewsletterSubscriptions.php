@@ -19,12 +19,14 @@ class NewsletterSubscriptions extends AbstractBlockModel
     {
         parent::parse($block);
 
-        $newsletterLists = array_values($this->di->user->_('newsletterLists'));
-        foreach ($newsletterLists as $key => $newsletterListArray) :
-            /** @var NewsletterList $newletterList */
-            $newletterList = NewsletterList::findById($newsletterListArray['newsletterListId']);
-            $newsletterLists[$key]['newsletterListName'] = $newletterList->getNameField();
-        endforeach;
-        $block->set('newsletterLists', $newsletterLists);
+        if(is_array($this->di->user->_('newsletterLists'))) :
+            $newsletterLists = array_values($this->di->user->_('newsletterLists'));
+            foreach ($newsletterLists as $key => $newsletterListArray) :
+                /** @var NewsletterList $newletterList */
+                $newletterList = NewsletterList::findById($newsletterListArray['newsletterListId']);
+                $newsletterLists[$key]['newsletterListName'] = $newletterList->getNameField();
+            endforeach;
+            $block->set('newsletterLists', $newsletterLists);
+        endif;
     }
 }
