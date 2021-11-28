@@ -33,6 +33,6 @@
     "vitessecms/job": "~0.2.1",
     "vitessecms/block": "~0.2.15",
     "vitessecms/database": "~0.2.4",
-    "vitessecms/content": "~0.2.13"
+    "vitessecms/content": "~0.2.14"
   }
 }
