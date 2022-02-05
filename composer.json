@@ -25,13 +25,13 @@
     "vitessecms/language": "~0.2.2",
     "vitessecms/sef": "~0.2.1",
     "vitessecms/setting": "~0.2.5",
-    "vitessecms/user": "~0.2.5",
+    "vitessecms/user": "~0.2.6",
     "vitessecms/core": "~0.2.11",
     "vitessecms/form": "~0.2.8",
     "vitessecms/datafield": "~0.2.13",
     "vitessecms/datagroup": "~0.2.9",
     "vitessecms/job": "~0.2.1",
-    "vitessecms/block": "~0.2.17",
+    "vitessecms/block": "~0.2.18",
     "vitessecms/database": "~0.2.5",
     "vitessecms/content": "~0.2.16"
   }
