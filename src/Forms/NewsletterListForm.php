@@ -35,7 +35,7 @@ class NewsletterListForm extends AbstractFormWithRepository
                         ElementHelper::modelIteratorToOptions($this->repositories->language->findAll())))
             ->addEmail('%CORE_EMAIL%', 'addEmail')
             ->addHtml($this->_entity->getDataHtml() ?? '')
-            ->addSubmitButton('submit', '%CORE_SAVE%');
+            ->addSubmitButton('%CORE_SAVE%');
 
         return $this;
     }
