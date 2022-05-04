@@ -4,13 +4,10 @@ namespace VitesseCms\Communication\Forms;
 
 use VitesseCms\Communication\Models\NewsletterList;
 use VitesseCms\Communication\Repositories\RepositoryCollection;
-use VitesseCms\Form\AbstractForm;
 use VitesseCms\Form\AbstractFormWithRepository;
 use VitesseCms\Form\Helpers\ElementHelper;
 use VitesseCms\Form\Interfaces\FormWithRepositoryInterface;
 use VitesseCms\Form\Models\Attributes;
-use VitesseCms\Language\Models\Language;
-use VitesseCms\User\Models\User;
 
 class NewsletterListForm extends AbstractFormWithRepository
 {
@@ -35,7 +32,7 @@ class NewsletterListForm extends AbstractFormWithRepository
                         ElementHelper::modelIteratorToOptions($this->repositories->language->findAll())))
             ->addEmail('%CORE_EMAIL%', 'addEmail')
             ->addHtml($this->_entity->getDataHtml() ?? '')
-            ->addSubmitButton('submit', '%CORE_SAVE%');
+            ->addSubmitButton('%CORE_SAVE%');
 
         return $this;
     }
