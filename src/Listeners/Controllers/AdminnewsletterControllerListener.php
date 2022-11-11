@@ -7,6 +7,8 @@ use VitesseCms\Admin\Forms\AdminlistFormInterface;
 use VitesseCms\Communication\Controllers\AdminnewsletterController;
 use VitesseCms\Communication\Models\Newsletter;
 use Phalcon\Events\Event;
+use VitesseCms\Mustache\DTO\RenderTemplateDTO;
+use VitesseCms\Mustache\Enum\ViewEnum;
 
 class AdminnewsletterControllerListener
 {
@@ -36,16 +38,18 @@ class AdminnewsletterControllerListener
         $language = $controller->repositories->language->getById(
             $newsletter->getLanguage()
         );
-        $newsletter->setAdminListExtra($controller->view->renderModuleTemplate(
-            'communication',
+
+        $adminListExtra = $controller->eventsManager->fire(ViewEnum::RENDER_TEMPLATE_EVENT, new RenderTemplateDTO(
             'newsletterAdminListItem',
-            'admin/',
+            $controller->router->getModuleName() . '/src/Resources/views/admin/',
             [
                 'newsletter' => $newsletter,
                 'languageShort' => $language ? $language->getShortCode() : '',
                 'listSortable' => $controller->isListSortable(),
             ]
         ));
+
+        $newsletter->setAdminListExtra($adminListExtra);
     }
 
     public function adminListFilter(

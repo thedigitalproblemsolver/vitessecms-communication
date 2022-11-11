@@ -10,6 +10,8 @@ use VitesseCms\Communication\Models\NewsletterQueue;
 use Phalcon\Events\Event;
 use VitesseCms\Form\Helpers\ElementHelper;
 use VitesseCms\Form\Models\Attributes;
+use VitesseCms\Mustache\DTO\RenderTemplateDTO;
+use VitesseCms\Mustache\Enum\ViewEnum;
 
 class AdminnewsletterqueueControllerListener
 {
@@ -19,13 +21,12 @@ class AdminnewsletterqueueControllerListener
         NewsletterQueue $newsletterQueue
     ): void
     {
-        $newsletterQueue->setAdminListExtra($controller->view->renderModuleTemplate(
-            'communication',
+        $adminListExtra = $controller->eventsManager->fire(ViewEnum::RENDER_TEMPLATE_EVENT, new RenderTemplateDTO(
             'newsletterQueueAdminListItem',
-            'admin/',
+            $controller->router->getModuleName() . '/src/Resources/views/admin/',
             ['newsletterQueue' => $newsletterQueue]
         ));
-
+        $newsletterQueue->setAdminListExtra($adminListExtra);
         $newsletterQueue->setAdminListName($newsletterQueue->getEmail());
     }
 
