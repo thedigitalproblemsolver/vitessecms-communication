@@ -21,7 +21,6 @@
     "vitessecms/export": "~0.2.8",
     "vitessecms/configuration": "~0.2.2",
     "drewm/mailchimp-api": "^2.5",
-    "phalcon/incubator": "3.2.6",
     "vitessecms/language": "~0.2.4",
     "vitessecms/sef": "~0.2.2",
     "vitessecms/setting": "~0.2.6",
