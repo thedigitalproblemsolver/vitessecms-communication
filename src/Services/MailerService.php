@@ -11,7 +11,7 @@ use VitesseCms\Setting\Services\SettingService;
 use Phalcon\Mailer\Manager;
 use Phalcon\Mailer\Message;
 
-class MailerService extends Manager
+class MailerService
 {
     /**
      * @var SettingService
