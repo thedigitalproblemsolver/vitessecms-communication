@@ -32,6 +32,7 @@
     "vitessecms/job": "~0.2.4",
     "vitessecms/block": "~0.2.20",
     "vitessecms/database": "~0.2.6",
-    "vitessecms/content": "~0.2.21"
+    "vitessecms/content": "~0.2.21",
+    "thedigitalproblemsolver/incubator-mailer": "^1.0"
   }
 }

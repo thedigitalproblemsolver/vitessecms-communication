@@ -7,7 +7,7 @@ use VitesseCms\Content\Helpers\EventVehicleHelper;
 use VitesseCms\Content\Listeners\ContentTags\AbstractTagListener;
 use VitesseCms\Content\Models\Item;
 use VitesseCms\Database\Utils\MongoUtil;
-use Phalcon\Di;
+use Phalcon\Di\Di;
 
 class TagSubscribeListener extends AbstractTagListener
 {

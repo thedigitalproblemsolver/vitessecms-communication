@@ -16,7 +16,7 @@ use DateTime;
 use VitesseCms\Setting\Services\SettingService;
 use VitesseCms\User\Models\User;
 use MongoDB\BSON\ObjectId;
-use Phalcon\Di;
+use Phalcon\Di\Di;
 use Phalcon\Http\Request;
 use Phalcon\Mvc\User\Component;
 use Phalcon\Queue\Beanstalk\Job;

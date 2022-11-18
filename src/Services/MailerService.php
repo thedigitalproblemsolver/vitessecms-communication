@@ -41,7 +41,7 @@ class MailerService extends Manager
     )
     {
         parent::__construct([
-            'driver' => 'mail',
+            'driver' => 'sendmail',
             'from' => [
                 'email' => $setting->getString('WEBSITE_CONTACT_EMAIL'),
                 'name' => $setting->getString('WEBSITE_DEFAULT_NAME'),
