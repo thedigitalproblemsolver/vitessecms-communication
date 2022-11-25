@@ -2,6 +2,7 @@
 
 namespace VitesseCms\Communication\Listeners\ContentTags;
 
+use VitesseCms\Content\DTO\TagListenerDTO;
 use VitesseCms\Content\Helpers\EventVehicleHelper;
 use VitesseCms\Content\Listeners\ContentTags\AbstractTagListener;
 
@@ -12,7 +13,7 @@ class TagUnsubscribeListener extends AbstractTagListener
         $this->name = 'UNSUBSCRIBE';
     }
 
-    protected function parse(EventVehicleHelper $eventVehicle, string $tagString): void
+    protected function parse(EventVehicleHelper $eventVehicle, TagListenerDTO $tagListenerDTO): void
     {
         $unsubscribeLink = $eventVehicle->getUrl()->getBaseUri() .
             'communication/newsletterqueue/unsubscribe/' .
