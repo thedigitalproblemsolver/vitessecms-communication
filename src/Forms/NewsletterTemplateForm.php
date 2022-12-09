@@ -14,11 +14,6 @@ use VitesseCms\Language\Models\Language;
 
 class NewsletterTemplateForm extends AbstractFormWithRepository
 {
-    /**
-     * @var RepositoryCollection
-     */
-    protected $repositories;
-
     public function buildForm(): FormWithRepositoryInterface
     {
         $this->addText('%CORE_NAME%', 'name', (new Attributes())->setRequired(true))
