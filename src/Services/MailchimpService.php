@@ -10,7 +10,7 @@ use VitesseCms\Core\Services\UrlService;
 use VitesseCms\Setting\Services\SettingService;
 use VitesseCms\Shop\Models\Order;
 use Phalcon\Exception;
-use Phalcon\Session\Adapter\Files as Session;
+use Phalcon\Session\Manager as Session;
 
 class MailchimpService
 {

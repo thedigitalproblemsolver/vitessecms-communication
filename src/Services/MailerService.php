@@ -8,8 +8,8 @@ use VitesseCms\Core\Services\ViewService;
 use VitesseCms\Core\Utils\FileUtil;
 use VitesseCms\Sef\Utils\UtmUtil;
 use VitesseCms\Setting\Services\SettingService;
-use Phalcon\Mailer\Manager;
-use Phalcon\Mailer\Message;
+use Phalcon\Incubator\Mailer\Manager;
+use Phalcon\Incubator\Mailer\Message;
 
 class MailerService extends Manager
 {
@@ -41,10 +41,10 @@ class MailerService extends Manager
     )
     {
         parent::__construct([
-            'driver' => 'mail',
+            'driver' => 'sendmail',
             'from' => [
-                'email' => $setting->get('WEBSITE_CONTACT_EMAIL'),
-                'name' => $setting->get('WEBSITE_DEFAULT_NAME'),
+                'email' => $setting->getString('WEBSITE_CONTACT_EMAIL'),
+                'name' => $setting->getString('WEBSITE_DEFAULT_NAME'),
             ],
         ]);
         $this->setting = $setting;

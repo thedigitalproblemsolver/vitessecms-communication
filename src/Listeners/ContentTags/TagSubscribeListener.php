@@ -3,11 +3,12 @@
 namespace VitesseCms\Communication\Listeners\ContentTags;
 
 use VitesseCms\Communication\Models\NewsletterQueue;
+use VitesseCms\Content\DTO\TagListenerDTO;
 use VitesseCms\Content\Helpers\EventVehicleHelper;
 use VitesseCms\Content\Listeners\ContentTags\AbstractTagListener;
 use VitesseCms\Content\Models\Item;
 use VitesseCms\Database\Utils\MongoUtil;
-use Phalcon\Di;
+use Phalcon\Di\Di;
 
 class TagSubscribeListener extends AbstractTagListener
 {
@@ -16,9 +17,9 @@ class TagSubscribeListener extends AbstractTagListener
         $this->name = 'SUBSCRIBE';
     }
 
-    protected function parse(EventVehicleHelper $eventVehicle, string $tagString): void
+    protected function parse(EventVehicleHelper $eventVehicle, TagListenerDTO $tagListenerDTO): void
     {
-        $tagOptions = explode(';', $tagString);
+        $tagOptions = explode(';', $tagListenerDTO->getTagString());
         $content = '';
 
         if (!empty($tagOptions[1])) :
@@ -40,7 +41,7 @@ class TagSubscribeListener extends AbstractTagListener
                         endif;
                         $subscribeLink = $eventVehicle->getUrl()->getBaseUri() . $item->_('slug') . '?e=' . base64_encode($email) . '&';
                         $content = str_replace(
-                            ['{SUBSCRIBE' . $tagString . '}', '{/SUBSCRIBE}'],
+                            ['{SUBSCRIBE' . $tagListenerDTO->getTagString() . '}', '{/SUBSCRIBE}'],
                             ['<a href="' . $subscribeLink . '" class="link-subscribe" style="text-decoration:none;color:#ffffff" ' . $target . ' >', '</a>'],
                             $eventVehicle->_('content')
                         );

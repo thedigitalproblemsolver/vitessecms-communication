@@ -22,19 +22,9 @@ use VitesseCms\Language\Models\Language;
 
 class NewsletterForm extends AbstractFormWithRepository
 {
-    /**
-     * @var RepositoryInterface
-     */
-    protected $repositories;
-
-    /**
-     * @var Newsletter
-     */
-    protected $item;
-
     public function buildForm(): FormWithRepositoryInterface
     {
-        if ($this->item === null || $this->item->getParentId() === null) {
+        if ($this->entity === null || $this->entity->getParentId() === null) {
             $this->buildParentForm();
         } else {
             $this->buildChildForm();
@@ -58,16 +48,16 @@ class NewsletterForm extends AbstractFormWithRepository
                     ->setOptions(ElementHelper::modelIteratorToOptions($this->repositories->language->findAll())
                     ));
 
-        if ($this->item->getLanguage() !== null) :
+        if ($this->entity->getLanguage() !== null) :
             $newsletters = $this->repositories->newsletterList->findAll(
-                new FindValueIterator([new FindValue('language', $this->item->getLanguage())])
+                new FindValueIterator([new FindValue('language', $this->entity->getLanguage())])
             );
             $this->addDropdown(
                 'Newsletter list',
                 'list',
                 (new Attributes())->setOptions(ElementHelper::modelIteratorToOptions($newsletters))
             );
-            if (!$this->item->hasChildren) :
+            if (!$this->entity->hasChildren) :
                 $this->setBodyText();
             endif;
             $showSendNewsletterList = true;
@@ -75,14 +65,14 @@ class NewsletterForm extends AbstractFormWithRepository
 
         $this->addToggle('Start sending after subscribtion', 'sendAfterSubscribtion')
             ->addSubmitButton('%CORE_SAVE%')
-            ->addHtml('<span id="newsletterId" style="display:none">' . $this->item->getId() . '</span>');
+            ->addHtml('<span id="newsletterId" style="display:none">' . $this->entity->getId() . '</span>');
 
         if ($showSendNewsletterList) :
-            if (!$this->item->hasChildren()) :
+            if (!$this->entity->hasChildren()) :
                 $this->addDate('Senddate', 'sendDate')
                     ->addDate('Sendtime', 'sendTime');
             endif;
-            if ($this->item->isPublished()) :
+            if ($this->entity->isPublished()) :
                 $this->addButton('Place newsletter in  queue', 'queueNewsletter');
             endif;
         endif;
@@ -91,7 +81,7 @@ class NewsletterForm extends AbstractFormWithRepository
     protected function setBodyText(): void
     {
         $newsletterTemplates = $this->repositories->newsletterTemplate->findAll(
-            new FindValueIterator([new FindValue('language', $this->item->getLanguage())])
+            new FindValueIterator([new FindValue('language', $this->entity->getLanguage())])
         );
         $this->addDropdown(
             '%ADMIN_CHOOSE_A_TEMPLATE%',
@@ -103,7 +93,7 @@ class NewsletterForm extends AbstractFormWithRepository
         $options = [];
         foreach ($files as $key => $label) :
             $selected = false;
-            if ($this->item->getEmailType() === $key) :
+            if ($this->entity->getEmailType() === $key) :
                 $selected = true;
             endif;
             $options[] = [
@@ -119,15 +109,15 @@ class NewsletterForm extends AbstractFormWithRepository
         )->addText('Subject', 'subject', (new Attributes())->setRequired(true))
             ->addText('Motto', 'motto', (new Attributes())->setRequired(true));
 
-        if ($this->item->getTemplate() !== null) :
+        if ($this->entity->getTemplate() !== null) :
             $options = [[
                 'value' => '',
                 'label' => '%ADMIN_TYPE_TO_SEARCH%',
                 'selected' => false,
             ]];
 
-            if (!empty($this->item->getEmailHeaderTargetPage())) :
-                $selectedItem = $this->repositories->item->getById($this->item->getEmailHeaderTargetPage());
+            if (!empty($this->entity->getEmailHeaderTargetPage())) :
+                $selectedItem = $this->repositories->item->getById($this->entity->getEmailHeaderTargetPage());
                 $itemPath = ItemHelper::getPathFromRoot($selectedItem);
                 $options[] = [
                     'value' => (string)$selectedItem->getId(),
@@ -154,27 +144,21 @@ class NewsletterForm extends AbstractFormWithRepository
 
     protected function buildChildForm(): void
     {
-        $parentNewsletter = $this->repositories->newsletter->getById($this->item->getParentId());
-        $this->item->setLanguage($parentNewsletter->getLanguage());
-        $this->item->set('list', $parentNewsletter->_('list'));
+        $parentNewsletter = $this->repositories->newsletter->getById($this->entity->getParentId());
+        $this->entity->setLanguage($parentNewsletter->getLanguage());
+        $this->entity->set('list', $parentNewsletter->_('list'));
 
         $this->addText('%CORE_NAME%', 'name', (new Attributes())->setRequired(true))
             ->addHidden('language', $parentNewsletter->getLanguage())
             ->addHidden('list', $parentNewsletter->getList());
 
-        if ($this->item !== null && $this->item->getLanguage() !== null) :
+        if ($this->entity !== null && $this->entity->getLanguage() !== null) :
             $this->setBodyText();
         endif;
 
         $this->addNumber('days after previous mail', 'days', (new Attributes())->setMin(0)->setStep(1))
             ->addTime('Sendtime', 'sendTime')
             ->addSubmitButton('%CORE_SAVE%')
-            ->addHtml('<span id="newsletterId" style="display:none">' . $this->item->getId() . '</span>');
-    }
-
-    public function setEntity($entity)
-    {
-        parent::setEntity($entity);
-        $this->item = $entity;
+            ->addHtml('<span id="newsletterId" style="display:none">' . $this->entity->getId() . '</span>');
     }
 }

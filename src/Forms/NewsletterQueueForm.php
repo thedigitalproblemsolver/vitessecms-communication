@@ -15,16 +15,6 @@ use VitesseCms\User\Models\User;
 
 class NewsletterQueueForm extends AbstractFormWithRepository
 {
-    /**
-     * @var RepositoryCollection
-     */
-    protected $repositories;
-
-    /**
-     * @var NewsletterQueue
-     */
-    protected $_entity;
-
     public function buildForm(): FormWithRepositoryInterface
     {
         $this->addText('%CORE_EMAIL%', 'email', (new Attributes())->setReadonly(true))
