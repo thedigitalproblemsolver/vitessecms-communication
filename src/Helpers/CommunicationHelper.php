@@ -6,7 +6,7 @@ use VitesseCms\Communication\Models\Email;
 use VitesseCms\Core\Services\ViewService;
 use VitesseCms\Database\AbstractCollection;
 use VitesseCms\Core\Factories\LogFactory;
-use Phalcon\Di;
+use Phalcon\Di\Di;
 use Phalcon\Mvc\Router;
 use function count;
 use function is_string;

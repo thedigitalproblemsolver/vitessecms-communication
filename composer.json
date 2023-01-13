@@ -5,7 +5,7 @@
   "keywords": ["php","phalcon","vitessecms"],
   "homepage": "https://github.com/thedigitalproblemsolver/VitesseCMS",
   "license": "GPL-2.0-or-later",
-  "version": "0.2.14",
+  "version": "0.3.1",
   "authors": [
     {
       "name": "Jasper Jaklofsky",
@@ -18,20 +18,21 @@
     }
   },
   "require": {
-    "vitessecms/export": "~0.2.8",
-    "vitessecms/configuration": "~0.2.2",
+    "vitessecms/export": "~0.3.0",
+    "vitessecms/configuration": "~0.3.0",
     "drewm/mailchimp-api": "^2.5",
-    "vitessecms/language": "~0.2.4",
-    "vitessecms/sef": "~0.2.2",
-    "vitessecms/setting": "~0.2.6",
-    "vitessecms/user": "~0.2.10",
-    "vitessecms/core": "~0.2.25",
-    "vitessecms/form": "~0.2.8",
-    "vitessecms/datafield": "~0.2.13",
-    "vitessecms/datagroup": "~0.2.9",
-    "vitessecms/job": "~0.2.4",
-    "vitessecms/block": "~0.2.20",
-    "vitessecms/database": "~0.2.6",
-    "vitessecms/content": "~0.2.21"
+    "vitessecms/language": "~0.3.0",
+    "vitessecms/sef": "~0.3.0",
+    "vitessecms/setting": "~0.3.0",
+    "vitessecms/user": "~0.3.0",
+    "vitessecms/core": "~0.3.0",
+    "vitessecms/form": "~0.3.0",
+    "vitessecms/datafield": "~0.3.0",
+    "vitessecms/datagroup": "~0.3.0",
+    "vitessecms/job": "~0.3.0",
+    "vitessecms/block": "~0.3.0",
+    "vitessecms/database": "~0.3.0",
+    "vitessecms/content": "~0.3.0",
+    "thedigitalproblemsolver/incubator-mailer": "^1.0"
   }
 }

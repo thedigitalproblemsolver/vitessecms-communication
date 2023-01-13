@@ -11,16 +11,6 @@ use VitesseCms\Form\Models\Attributes;
 
 class NewsletterListForm extends AbstractFormWithRepository
 {
-    /**
-     * @var RepositoryCollection
-     */
-    protected $repositories;
-
-    /**
-     * @var NewsletterList
-     */
-    protected $_entity;
-
     public function buildForm(): FormWithRepositoryInterface
     {
         $this->addText('%CORE_NAME%', 'name', (new Attributes())->setRequired(true))
@@ -31,7 +21,7 @@ class NewsletterListForm extends AbstractFormWithRepository
                     ->setOptions(
                         ElementHelper::modelIteratorToOptions($this->repositories->language->findAll())))
             ->addEmail('%CORE_EMAIL%', 'addEmail')
-            ->addHtml($this->_entity->getDataHtml() ?? '')
+            ->addHtml($this->entity->getDataHtml() ?? '')
             ->addSubmitButton('%CORE_SAVE%');
 
         return $this;

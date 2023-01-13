@@ -15,7 +15,7 @@ use VitesseCms\Core\AbstractModule;
 use VitesseCms\Core\Interfaces\RepositoryCollectionInterface;
 use VitesseCms\Datagroup\Repositories\DatagroupRepository;
 use VitesseCms\Language\Repositories\LanguageRepository;
-use Phalcon\DiInterface;
+use Phalcon\Di\DiInterface;
 
 class Module extends AbstractModule
 {

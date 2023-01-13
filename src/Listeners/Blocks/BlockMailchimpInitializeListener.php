@@ -4,7 +4,7 @@ namespace VitesseCms\Communication\Listeners\Blocks;
 
 use Phalcon\Events\Event;
 use Phalcon\Http\Request;
-use Phalcon\Session\Adapter\Files as Session;
+use Phalcon\Session\Manager as Session;
 
 class BlockMailchimpInitializeListener
 {
