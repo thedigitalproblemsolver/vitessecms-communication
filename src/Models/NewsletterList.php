@@ -7,6 +7,7 @@ use VitesseCms\Communication\Factories\NewsletterListMemberFactory;
 use VitesseCms\Communication\Helpers\NewsletterListHelper;
 use VitesseCms\Communication\Helpers\NewsletterQueueHelper;
 use VitesseCms\Database\AbstractCollection;
+use VitesseCms\Log\Enums\LogEnum;
 use VitesseCms\User\Models\User;
 use function is_array;
 
@@ -58,6 +59,8 @@ class NewsletterList extends AbstractCollection
     public function addMember(string $email): NewsletterList
     {
         if (!NewsletterListHelper::emailExistsAsMember($email, $this)) :
+            $logService = $this->getDI()->get('eventsManager')->fire(LogEnum::ATTACH_SERVICE_LISTENER, new \stdClass());
+
             $userId = '';
             User::setFindValue('email', $email);
             $user = User::findFirst();
@@ -89,11 +92,7 @@ class NewsletterList extends AbstractCollection
             endif;
 
             $this->set('members', $members);
-            $this->di->log->write(
-                $this->getId(),
-                __CLASS__,
-                'Added ' . $email . ' to ' . $this->_('name')
-            );
+            $logService->write($this->getId(), __CLASS__, 'Added ' . $email . ' to ' . $this->_('name'));
         endif;
 
         return $this;

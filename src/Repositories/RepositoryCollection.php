@@ -2,7 +2,6 @@
 
 namespace VitesseCms\Communication\Repositories;
 
-use VitesseCms\Block\Repositories\BlockFormBuilderRepository;
 use VitesseCms\Communication\Repositories\RepositoryInterface;
 use VitesseCms\Content\Repositories\ItemRepository;
 use VitesseCms\Core\Interfaces\RepositoryCollectionInterface;
@@ -16,11 +15,6 @@ class RepositoryCollection implements RepositoryInterface, RepositoryCollectionI
      * @var NewsletterTemplateRepository
      */
     public $newsletterTemplate;
-
-    /**
-     * @var BlockFormBuilderRepository
-     */
-    public $blockFormBuilder;
 
     /**
      * @var LanguageRepository
@@ -59,7 +53,6 @@ class RepositoryCollection implements RepositoryInterface, RepositoryCollectionI
 
     public function __construct(
         NewsletterTemplateRepository $newsletterTemplateRepository,
-        BlockFormBuilderRepository $blockFormBuilderRepository,
         LanguageRepository $languageRepository,
         DatagroupRepository $datagroupRepository,
         NewsletterRepository $newsletterRepository,
@@ -70,7 +63,6 @@ class RepositoryCollection implements RepositoryInterface, RepositoryCollectionI
     )
     {
         $this->newsletterTemplate = $newsletterTemplateRepository;
-        $this->blockFormBuilder = $blockFormBuilderRepository;
         $this->language = $languageRepository;
         $this->datagroup = $datagroupRepository;
         $this->newsletter = $newsletterRepository;
