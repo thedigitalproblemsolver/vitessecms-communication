@@ -5,11 +5,7 @@ namespace VitesseCms\Communication\Controllers;
 use VitesseCms\Communication\Enums\NewsletterListEnum;
 use VitesseCms\Communication\Enums\TranslationEnum;
 use VitesseCms\Communication\Repositories\NewsletterListRepository;
-use VitesseCms\Communication\Repositories\RepositoriesInterface;
-use VitesseCms\Core\AbstractController;
 use VitesseCms\Core\AbstractControllerFrontend;
-use VitesseCms\Form\Controllers\IndexController;
-use VitesseCms\Form\Utils\FormUtil;
 use stdClass;
 
 class NewsletterlistController extends AbstractControllerFrontend
