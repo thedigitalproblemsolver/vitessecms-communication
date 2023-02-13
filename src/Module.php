@@ -2,7 +2,6 @@
 
 namespace VitesseCms\Communication;
 
-use VitesseCms\Block\Repositories\BlockFormBuilderRepository;
 use VitesseCms\Block\Repositories\BlockRepository;
 use VitesseCms\Communication\Repositories\EmailRepository;
 use VitesseCms\Communication\Repositories\NewsletterListRepository;
@@ -29,7 +28,6 @@ class Module extends AbstractModule
     {
         return new RepositoryCollection(
             new NewsletterTemplateRepository(),
-            new BlockFormBuilderRepository(new BlockRepository()),
             new LanguageRepository(),
             new DatagroupRepository(),
             new NewsletterRepository(),
