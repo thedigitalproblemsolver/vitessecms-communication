@@ -12,5 +12,4 @@ class NewsletterListListener
     {
         return $this->newsletterListRepository;
     }
-
 }
