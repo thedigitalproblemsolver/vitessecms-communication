@@ -3,6 +3,7 @@
 namespace VitesseCms\Communication\Helpers;
 
 use VitesseCms\Communication\Models\Email;
+use VitesseCms\Core\Services\RouterService;
 use VitesseCms\Core\Services\ViewService;
 use VitesseCms\Database\AbstractCollection;
 use VitesseCms\Core\Factories\LogFactory;
@@ -14,7 +15,7 @@ use function is_string;
 class CommunicationHelper
 {
     public static function sendRedirectEmail(
-        Router $router,
+        RouterService $router,
         ViewService $view
     ): void
     {

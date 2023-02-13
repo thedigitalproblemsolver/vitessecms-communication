@@ -21,7 +21,7 @@
     "vitessecms/export": "~0.3.1",
     "vitessecms/configuration": "~0.4.0",
     "drewm/mailchimp-api": "^2.5",
-    "vitessecms/language": "~0.3.2",
+    "vitessecms/language": "~0.3.3",
     "vitessecms/sef": "~0.3.1",
     "vitessecms/setting": "~0.3.1",
     "vitessecms/user": "~0.4.0",
@@ -30,7 +30,7 @@
     "vitessecms/datafield": "~0.3.1",
     "vitessecms/datagroup": "~0.3.1",
     "vitessecms/job": "~0.4.0",
-    "vitessecms/block": "~0.4.0",
+    "vitessecms/block": "~0.4.1",
     "vitessecms/database": "~0.3.4",
     "vitessecms/content": "~0.4.0",
     "thedigitalproblemsolver/incubator-mailer": "^1.0"

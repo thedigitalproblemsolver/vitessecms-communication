@@ -2,20 +2,34 @@
 
 namespace VitesseCms\Communication\Controllers;
 
-use VitesseCms\Communication\Helpers\NewsletterQueueHelper;
-use VitesseCms\Communication\Repositories\RepositoriesInterface;
-use VitesseCms\Core\AbstractController;
+use VitesseCms\Communication\Enums\NewsletterListEnum;
+use VitesseCms\Communication\Enums\NewsletterQueueEnum;
+use VitesseCms\Communication\Enums\TranslationEnum;
+use VitesseCms\Communication\Repositories\NewsletterListRepository;
+use VitesseCms\Communication\Repositories\NewsletterQueueRepository;
+use VitesseCms\Core\AbstractControllerFrontend;
 
-class NewsletterqueueController extends AbstractController implements RepositoriesInterface
+class NewsletterqueueController extends AbstractControllerFrontend
 {
+    private NewsletterQueueRepository $newsletterQueueRepository;
+    private NewsletterListRepository $newsletterListRepository;
+
+    public function onConstruct()
+    {
+        parent::onConstruct();
+
+        $this->newsletterQueueRepository = $this->eventsManager->fire(NewsletterQueueEnum::GET_REPOSITORY->value, new stdClass());
+        $this->newsletterListRepository = $this->eventsManager->fire(NewsletterListEnum::GET_REPOSITORY->value, new stdClass());
+    }
+
     public function unsubscribeAction(string $newsletterQueueId): void
     {
-        $newsletterQueue = $this->repositories->newsletterQueue->getById($newsletterQueueId);
+        $newsletterQueue = $this->newsletterQueueRepository->getById($newsletterQueueId);
         if ($newsletterQueue !== null) :
-            $newsletterList = $this->repositories->newsletterList->getById($newsletterQueue->getNewsletterListId());
+            $newsletterList = $this->newsletterListRepository->getById($newsletterQueue->getNewsletterListId());
             if ($newsletterList !== null) :
                 $newsletterList->unsubscribeMember($newsletterQueue->getEmail())->save();
-                $this->flash->setSucces('NEWSLETTER_LIST_UNSUBSCRIBE_SUCCESS');
+                $this->flashService->setSucces(TranslationEnum::COMMUNICATION_LIST_UNSUBSCRIBE_SUCCESS->name);
             endif;
         endif;
 
@@ -24,13 +38,13 @@ class NewsletterqueueController extends AbstractController implements Repositori
 
     public function openedAction(string $newsletterQueueId): void
     {
-        $newsletterQueue = $this->repositories->newsletterQueue->getById($newsletterQueueId);
+        $newsletterQueue = $this->newsletterQueueRepository->getById($newsletterQueueId);
         if ($newsletterQueue !== null && $newsletterQueue->getDateOpened() !== null) :
             $newsletterQueue->setDateOpened((new DateTime())->format('Y-m-d H:i:s'))->save();
         endif;
 
         $this->response->setHeader('Content-Type', 'image/png');
-        echo file_get_contents($this->configuration->getVendorNameDir() . 'communication/src/Resources/assets/images/1_1_transparent.png');
+        echo file_get_contents($this->configService->getVendorNameDir() . 'communication/src/Resources/assets/images/1_1_transparent.png');
 
         $this->disableView();
     }

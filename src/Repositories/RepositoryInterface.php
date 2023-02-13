@@ -2,7 +2,6 @@
 
 namespace VitesseCms\Communication\Repositories;
 
-use VitesseCms\Block\Repositories\BlockFormBuilderRepository;
 use VitesseCms\Communication\Repositories\EmailRepository;
 use VitesseCms\Communication\Repositories\NewsletterListRepository;
 use VitesseCms\Communication\Repositories\NewsletterQueueRepository;
@@ -15,7 +14,6 @@ use VitesseCms\Language\Repositories\LanguageRepository;
 /**
  * Interface RepositoryInterface
  * @property NewsletterTemplateRepository $newsletterTemplate
- * @property BlockFormBuilderRepository $blockFormBuilder
  * @property LanguageRepository $language
  * @property DatagroupRepository $datagroup
  * @property NewsletterRepository $newsletter
