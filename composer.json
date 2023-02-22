@@ -32,9 +32,9 @@
     "vitessecms/datafield": "~0.3.2",
     "vitessecms/datagroup": "~0.4.0",
     "vitessecms/job": "~0.4.0",
-    "vitessecms/block": "~0.4.1",
+    "vitessecms/block": "~0.4.2",
     "vitessecms/database": "~0.3.4",
-    "vitessecms/content": "~0.4.3",
+    "vitessecms/content": "~0.4.4",
     "thedigitalproblemsolver/incubator-mailer": "^1.0"
   }
 }
