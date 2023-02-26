@@ -15,7 +15,7 @@ use VitesseCms\Datagroup\Repositories\DatagroupRepository;
 use VitesseCms\Database\AbstractCollection;
 use VitesseCms\Core\Utils\FileUtil;
 use VitesseCms\Export\Repositories\ExportTypeRepository;
-use VitesseCms\Export\Repositories\ItemRepository;
+use VitesseCms\Content\Repositories\ItemRepository;
 use VitesseCms\Language\Repositories\LanguageRepository;
 
 class AdminnewsletterlistController extends AbstractAdminController implements RepositoriesInterface
