@@ -12,16 +12,6 @@ use VitesseCms\Form\Models\Attributes;
 
 class NewsletterListImportForm extends AbstractFormWithRepository
 {
-    /**
-     * @var RepositoryCollection
-     */
-    protected $reposotories;
-
-    /**
-     * @var NewsletterList
-     */
-    protected $_entity;
-
     public function buildForm(): FormWithRepositoryInterface
     {
         $this->addDropdown(
