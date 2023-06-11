@@ -18,6 +18,7 @@ class SocialMediaChannels extends AbstractBlockModel
         $params['CONTACT_SOCIALMEDIA_INSTAGRAMURL'] = $settingService->getString('CONTACT_SOCIALMEDIA_INSTAGRAMURL');
         $params['CONTACT_SOCIALMEDIA_TWITTERURL'] = $settingService->getString('CONTACT_SOCIALMEDIA_TWITTERURL');
         $params['CONTACT_SOCIALMEDIA_PINTERESTURL'] = $settingService->getString('CONTACT_SOCIALMEDIA_PINTERESTURL');
+        $params['CONTACT_SOCIALMEDIA_GITHUB'] = $settingService->getString('CONTACT_SOCIALMEDIA_GITHUB');
 
         return $params;
     }
