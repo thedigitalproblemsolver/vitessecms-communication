@@ -23,7 +23,7 @@
     "vitessecms/export": "^1.0.0",
     "vitessecms/configuration": "^1.0.0",
     "drewm/mailchimp-api": "^2.5",
-    "vitessecms/language": "^1.0.0",
+    "vitessecms/language": "^1.0.1",
     "vitessecms/sef": "^1.0.4",
     "vitessecms/setting": "^1.0.1",
     "vitessecms/user": "^1.0.0",
