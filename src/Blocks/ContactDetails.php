@@ -1,8 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace VitesseCms\Communication\Blocks;
 
 use Phalcon\Di\Di;
+use stdClass;
 use VitesseCms\Block\AbstractBlockModel;
 use VitesseCms\Block\Models\Block;
 use VitesseCms\Core\Services\ViewService;
@@ -17,7 +19,7 @@ class ContactDetails extends AbstractBlockModel
     {
         parent::__construct($view, $di);
 
-        $this->settingService = $this->eventsManager->fire(SettingEnum::ATTACH_SERVICE_LISTENER->value,new \stdClass());
+        $this->settingService = $this->eventsManager->fire(SettingEnum::ATTACH_SERVICE_LISTENER->value, new stdClass());
     }
 
     public function getTemplateParams(Block $block): array
@@ -32,7 +34,9 @@ class ContactDetails extends AbstractBlockModel
         $params['CONTACT_ADDRESS_PHONENUMBER'] = $this->settingService->getString('CONTACT_ADDRESS_PHONENUMBER');
         $params['CONTACT_ADDRESS_EMAIL'] = $this->settingService->getString('CONTACT_ADDRESS_EMAIL');
         $params['CONTACT_VAT_NUMBER'] = $this->settingService->getString('CONTACT_VAT_NUMBER');
-        $params['CONTACT_CHAMBER-OF-COMMERCE_NUMBER'] = $this->settingService->getString('CONTACT_CHAMBER-OF-COMMERCE_NUMBER');
+        $params['CONTACT_CHAMBER-OF-COMMERCE_NUMBER'] = $this->settingService->getString(
+            'CONTACT_CHAMBER-OF-COMMERCE_NUMBER'
+        );
         $params['CONTACT_PAYMENT_IBAN'] = $this->settingService->getString('CONTACT_PAYMENT_IBAN');
         $params['CONTACT_PAYMENT_BIC'] = $this->settingService->getString('CONTACT_PAYMENT_BIC');
 

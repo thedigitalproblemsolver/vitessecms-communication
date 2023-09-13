@@ -1,14 +1,17 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace VitesseCms\Communication\Models;
 
 use DateTime;
+use stdClass;
 use VitesseCms\Communication\Factories\NewsletterListMemberFactory;
 use VitesseCms\Communication\Helpers\NewsletterListHelper;
 use VitesseCms\Communication\Helpers\NewsletterQueueHelper;
 use VitesseCms\Database\AbstractCollection;
 use VitesseCms\Log\Enums\LogServiceEnum;
 use VitesseCms\User\Models\User;
+
 use function is_array;
 
 class NewsletterList extends AbstractCollection
@@ -59,7 +62,10 @@ class NewsletterList extends AbstractCollection
     public function addMember(string $email): NewsletterList
     {
         if (!NewsletterListHelper::emailExistsAsMember($email, $this)) :
-            $logService = $this->getDI()->get('eventsManager')->fire(LogServiceEnum::ATTACH_SERVICE_LISTENER->value, new \stdClass());
+            $logService = $this->getDI()->get('eventsManager')->fire(
+                LogServiceEnum::ATTACH_SERVICE_LISTENER->value,
+                new stdClass()
+            );
 
             $userId = '';
             User::setFindValue('email', $email);
@@ -100,7 +106,10 @@ class NewsletterList extends AbstractCollection
 
     public function subscribeMember(string $email): NewsletterList
     {
-        $logService = $this->getDI()->get('eventsManager')->fire(LogServiceEnum::ATTACH_SERVICE_LISTENER->value, new \stdClass());
+        $logService = $this->getDI()->get('eventsManager')->fire(
+            LogServiceEnum::ATTACH_SERVICE_LISTENER->value,
+            new stdClass()
+        );
         $members = (array)$this->_('members');
         foreach ($members as $key => $member) :
             if ($member['email'] === $email) :
@@ -123,7 +132,11 @@ class NewsletterList extends AbstractCollection
         endforeach;
         $this->set('members', $members);
 
-        $logService->write($this->getId(), __CLASS__, 'Subscribe ' . $email . ' from ' . $this->getNameField() . ' by admin');
+        $logService->write(
+            $this->getId(),
+            __CLASS__,
+            'Subscribe ' . $email . ' from ' . $this->getNameField() . ' by admin'
+        );
 
         return $this;
     }
@@ -131,7 +144,10 @@ class NewsletterList extends AbstractCollection
     public function unsubscribeMember(string $email): NewsletterList
     {
         $members = (array)$this->_('members');
-        $logService = $this->getDI()->get('eventsManager')->fire(LogServiceEnum::ATTACH_SERVICE_LISTENER->value, new \stdClass());
+        $logService = $this->getDI()->get('eventsManager')->fire(
+            LogServiceEnum::ATTACH_SERVICE_LISTENER->value,
+            new stdClass()
+        );
 
         foreach ($members as $key => $member) :
             if ($member['email'] === $email && empty($member['unSubscribeDate'])) :
@@ -164,7 +180,10 @@ class NewsletterList extends AbstractCollection
     public function removeMember(string $email): NewsletterList
     {
         $members = (array)$this->_('members');
-        $logService = $this->getDI()->get('eventsManager')->fire(LogServiceEnum::ATTACH_SERVICE_LISTENER->value, new \stdClass());
+        $logService = $this->getDI()->get('eventsManager')->fire(
+            LogServiceEnum::ATTACH_SERVICE_LISTENER->value,
+            new stdClass()
+        );
 
         foreach ($members as $key => $member) :
             if (isset($member['email']) && $member['email'] === $email) :
