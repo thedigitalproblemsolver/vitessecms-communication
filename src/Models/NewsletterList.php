@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace VitesseCms\Communication\Models;
@@ -215,7 +216,7 @@ class NewsletterList extends AbstractCollection
 
     public function getMembers(): array
     {
-        return $this->members;
+        return $this->members ?? [];
     }
 
     public function setName(string $name): NewsletterList
