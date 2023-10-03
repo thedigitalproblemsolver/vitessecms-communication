@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace VitesseCms\Communication\Listeners;
@@ -9,6 +10,7 @@ use VitesseCms\Communication\Controllers\AdminnewsletterController;
 use VitesseCms\Communication\Controllers\AdminnewsletterlistController;
 use VitesseCms\Communication\Controllers\AdminnewsletterqueueController;
 use VitesseCms\Communication\Controllers\AdminnewslettertemplateController;
+use VitesseCms\Communication\Enums\NewsletterListEnum;
 use VitesseCms\Communication\Listeners\Admin\AdminMenuListener;
 use VitesseCms\Communication\Listeners\Blocks\BlockNewsletterSubscribeListener;
 use VitesseCms\Communication\Listeners\Controllers\AdminemailControllerListener;
@@ -24,7 +26,7 @@ use VitesseCms\Core\Interfaces\InitiateListenersInterface;
 use VitesseCms\Core\Interfaces\InjectableInterface;
 use VitesseCms\User\Models\User;
 
-class InitiateAdminListeners implements InitiateListenersInterface
+final class InitiateAdminListeners implements InitiateListenersInterface
 {
     public static function setListeners(InjectableInterface $di): void
     {
@@ -46,6 +48,10 @@ class InitiateAdminListeners implements InitiateListenersInterface
         $di->eventsManager->attach(
             User::class,
             new UserListener($di->log, new NewsletterListRepository(), new NewsletterQueueRepository())
+        );
+        $di->eventsManager->attach(
+            NewsletterListEnum::SERVICE_LISTENER->value,
+            new NewsletterListListener(new NewsletterListRepository())
         );
     }
 }
