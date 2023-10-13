@@ -1,23 +1,19 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace VitesseCms\Communication\Controllers;
 
+use VitesseCms\Admin\AbstractAdminController;
 use VitesseCms\Communication\Factories\NewsletterQueueFactory;
 use VitesseCms\Communication\Forms\NewsletterForm;
 use VitesseCms\Communication\Helpers\NewsletterHelper;
 use VitesseCms\Communication\Helpers\NewsletterQueueHelper;
-use VitesseCms\Communication\Repositories\RepositoriesInterface;
 use VitesseCms\Communication\Models\Newsletter;
-use VitesseCms\Admin\AbstractAdminController;
+use VitesseCms\Communication\Repositories\RepositoriesInterface;
 use VitesseCms\Database\AbstractCollection;
 
-class AdminnewsletterController extends AbstractAdminController implements RepositoriesInterface
+final class AdminnewsletterController extends AbstractAdminController implements RepositoriesInterface
 {
-    /**
-     * @var array
-     */
-    protected $parseAsJob = ['sendPreview'];
-
     public function onConstruct(): void
     {
         parent::onConstruct();
@@ -28,6 +24,7 @@ class AdminnewsletterController extends AbstractAdminController implements Repos
         $this->listOrderDirection = -1;
         $this->listNestable = true;
         $this->listSortable = true;
+        $this->parseAsJob = ['sendPreview'];
     }
 
     public function sendPreviewAction(string $id): void
