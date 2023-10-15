@@ -1,15 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace VitesseCms\Communication\Models;
 
 use ArrayIterator;
-use VitesseCms\Database\AbstractCollection;
 
 class NewsletterTemplateIterator extends ArrayIterator
 {
-    public function __construct(array $newsletterLists)
+    public function __construct(array $newsletterQueue)
     {
-        parent::__construct($newsletterLists);
+        parent::__construct($newsletterQueue);
     }
 
     public function current(): NewsletterTemplate

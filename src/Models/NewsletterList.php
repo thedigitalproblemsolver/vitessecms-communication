@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace VitesseCms\Communication\Models;
@@ -14,28 +15,12 @@ use VitesseCms\User\Models\User;
 
 use function is_array;
 
-class NewsletterList extends AbstractCollection
+final class NewsletterList extends AbstractCollection
 {
-    /**
-     * @var array
-     */
-    public $members;
-    /**
-     * @var string
-     */
-    public $name;
-    /**
-     * @var string
-     */
-    public $language;
-    /**
-     * @var string
-     */
-    protected $dataHtml;
-    /**
-     * @var string
-     */
-    protected $addEmail;
+    public array $members;
+    public string $language;
+    public string $addEmail;
+    protected ?string $dataHtml = null;
 
     public function onConstruct()
     {
@@ -215,7 +200,7 @@ class NewsletterList extends AbstractCollection
 
     public function getMembers(): array
     {
-        return $this->members;
+        return $this->members ?? [];
     }
 
     public function setName(string $name): NewsletterList
