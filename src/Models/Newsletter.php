@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace VitesseCms\Communication\Models;
 
@@ -153,5 +155,14 @@ class Newsletter extends AbstractCollection
     public function getSendTime(): ?string
     {
         return $this->sendTime;
+    }
+
+    public function getAdminListExtra(): string
+    {
+        return str_replace(
+            ['[CRUD_LINK]', 'edit/'],
+            ['', 'admin/communication/adminnewsletter/edit/'],
+            $this->adminListExtra
+        );
     }
 }
