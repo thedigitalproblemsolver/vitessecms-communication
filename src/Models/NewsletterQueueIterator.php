@@ -8,9 +8,9 @@ use ArrayIterator;
 
 class NewsletterQueueIterator extends ArrayIterator
 {
-    public function __construct(array $newsletterQueue)
+    public function __construct(array $emails)
     {
-        parent::__construct($newsletterQueue);
+        parent::__construct($emails);
     }
 
     public function current(): NewsletterQueue
