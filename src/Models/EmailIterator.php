@@ -6,14 +6,14 @@ namespace VitesseCms\Communication\Models;
 
 use ArrayIterator;
 
-class NewsletterTemplateIterator extends ArrayIterator
+final class EmailIterator extends ArrayIterator
 {
     public function __construct(array $emails)
     {
         parent::__construct($emails);
     }
 
-    public function current(): NewsletterTemplate
+    public function current(): Email
     {
         return parent::current();
     }

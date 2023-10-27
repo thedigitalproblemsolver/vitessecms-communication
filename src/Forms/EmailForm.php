@@ -1,7 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace VitesseCms\Communication\Forms;
 
+use VitesseCms\Admin\Interfaces\AdminModelFormInterface;
 use VitesseCms\Core\Utils\DirectoryUtil;
 use VitesseCms\Core\Utils\FileUtil;
 use VitesseCms\Core\Utils\SystemUtil;
@@ -9,9 +12,9 @@ use VitesseCms\Form\AbstractForm;
 use VitesseCms\Form\Helpers\ElementHelper;
 use VitesseCms\Form\Models\Attributes;
 
-class EmailForm extends AbstractForm
+class EmailForm extends AbstractForm implements AdminModelFormInterface
 {
-    public function initialize(): void
+    public function buildForm(): void
     {
         $options = [];
         $modules = SystemUtil::getModules($this->configuration);
@@ -26,7 +29,9 @@ class EmailForm extends AbstractForm
                 $functions = FileUtil::getFunctions($controllerPath, $this->configuration);
                 foreach ($functions as $function) :
                     $function = str_replace('Action', '', $function);
-                    $options[strtolower($moduleName . $controllerName . $function)] = $moduleName . ' - ' . $controllerName . ' - ' . $function;
+                    $options[strtolower(
+                        $moduleName . $controllerName . $function
+                    )] = $moduleName . ' - ' . $controllerName . ' - ' . $function;
                 endforeach;
             endforeach;
         endforeach;
@@ -58,13 +63,21 @@ class EmailForm extends AbstractForm
         )->addDropdown(
             '%ADMIN_EMAIL_SYSTEM_ACTION_RESULT_TRIGGER%',
             'state',
-            (new Attributes())->setOptions(ElementHelper::arrayToSelectOptions([
-                'success' => '%ADMIN_ALERT_SUCCESS%',
-                'danger' => '%ADMIN_ALERT_DANGER%',
-                'notice' => '%ADMIN_ALERT_INFO%',
-                'warning' => '%ADMIN_ALERT_WARNING%',
-                'custom' => '%ADMIN_HARD_CODED%'
-            ]))->setInputClass('select2')
+            (new Attributes())->setOptions(
+                ElementHelper::arrayToSelectOptions([
+                    'success' => '%ADMIN_ALERT_SUCCESS%',
+                    'danger' => '%ADMIN_ALERT_DANGER%',
+                    'notice' => '%ADMIN_ALERT_INFO%',
+                    'warning' => '%ADMIN_ALERT_WARNING%',
+                    'custom' => '%ADMIN_HARD_CODED%'
+                ])
+            )->setInputClass('select2')
         )->addSubmitButton('%CORE_SAVE%');
+        if ($this->entity !== null) {
+            $this->addHtml(
+                '<a class="btn btn-outline-secondary" href="admin/communication/adminemail/sendPreview/' . $this->entity->getId(
+                ) . '">Send preview&nbsp;<i class="fa fa-envelope"></i></a>'
+            );
+        }
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace VitesseCms\Communication\Models;
@@ -8,9 +9,9 @@ use VitesseCms\Core\Interfaces\ArrayIteratorInterface;
 
 class NewsletterListIterator extends ArrayIterator
 {
-    public function __construct(array $newsletterQueue)
+    public function __construct(array $emails)
     {
-        parent::__construct($newsletterQueue);
+        parent::__construct($emails);
     }
 
     public function current(): NewsletterList

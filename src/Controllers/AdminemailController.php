@@ -1,41 +1,81 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace VitesseCms\Communication\Controllers;
 
-use VitesseCms\Admin\AbstractAdminController;
+use ArrayIterator;
+use stdClass;
+use VitesseCms\Admin\Interfaces\AdminModelDeletableInterface;
+use VitesseCms\Admin\Interfaces\AdminModelEditableInterface;
+use VitesseCms\Admin\Interfaces\AdminModelFormInterface;
+use VitesseCms\Admin\Interfaces\AdminModelListInterface;
+use VitesseCms\Admin\Interfaces\AdminModelPublishableInterface;
+use VitesseCms\Admin\Traits\TraitAdminModelDeletable;
+use VitesseCms\Admin\Traits\TraitAdminModelEditable;
+use VitesseCms\Admin\Traits\TraitAdminModelList;
+use VitesseCms\Admin\Traits\TraitAdminModelPublishable;
+use VitesseCms\Communication\Enums\EmailEnum;
 use VitesseCms\Communication\Forms\EmailForm;
-use VitesseCms\Communication\Repositories\RepositoriesInterface;
-use VitesseCms\Communication\Repositories\RepositoryInterface;
 use VitesseCms\Communication\Models\Email;
+use VitesseCms\Communication\Repositories\EmailRepository;
+use VitesseCms\Core\AbstractControllerAdmin;
+use VitesseCms\Database\AbstractCollection;
+use VitesseCms\Database\Models\FindValueIterator;
 
-class AdminemailController extends AbstractAdminController implements RepositoriesInterface
+final class AdminemailController extends AbstractControllerAdmin implements
+    AdminModelListInterface,
+    AdminModelPublishableInterface,
+    AdminModelEditableInterface,
+    AdminModelDeletableInterface
 {
-    /**
-     * @var array
-     */
-    protected $parseAsJob = ['sendPreview'];
+    use TraitAdminModelList;
+    use TraitAdminModelPublishable;
+    use TraitAdminModelEditable;
+    use TraitAdminModelDeletable;
+
+    protected array $parseAsJob = ['sendPreview'];
+
+    private readonly EmailRepository $emailRepository;
+
+    public function getModelList(?FindValueIterator $findValueIterator): ArrayIterator
+    {
+        return $this->emailRepository->findAll($findValueIterator, false);
+    }
+
 
     public function onConstruct()
     {
         parent::onConstruct();
 
-        $this->class = Email::class;
-        $this->classForm = EmailForm::class;
-        $this->listOrder = 'subject';
+        $this->emailRepository = $this->eventsManager->fire(EmailEnum::GET_REPOSITORY->value, new stdClass());
     }
 
     public function sendPreviewAction(string $id): void
     {
         if ($this->user->getId()) :
-            $email = $this->repositories->email->getById($id);
+            $email = $this->emailRepository->getById($id, false);
             $this->mailer->sendMail(
                 $this->user->getEmail(),
                 $email->getSubjectField(),
                 $email->getBodyField()
             );
-            $this->flash->setSucces('Preview email is send to ' . $this->user->_('email'));
+            $this->flashService->setSucces('Preview email is send to ' . $this->user->getEmail());
         endif;
 
-        $this->redirect();
+        $this->redirect($this->request->getHTTPReferer());
+    }
+
+    public function getModelForm(): AdminModelFormInterface
+    {
+        return new EmailForm();
+    }
+
+    public function getModel(string $id): ?AbstractCollection
+    {
+        return match ($id) {
+            'new' => new Email(),
+            default => $this->emailRepository->getById($id, false)
+        };
     }
 }

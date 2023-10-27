@@ -1,8 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace VitesseCms\Communication;
 
-use VitesseCms\Block\Repositories\BlockRepository;
+use Phalcon\Di\DiInterface;
+use VitesseCms\Communication\Models\Email;
 use VitesseCms\Communication\Repositories\EmailRepository;
 use VitesseCms\Communication\Repositories\NewsletterListRepository;
 use VitesseCms\Communication\Repositories\NewsletterQueueRepository;
@@ -14,7 +17,6 @@ use VitesseCms\Core\AbstractModule;
 use VitesseCms\Core\Interfaces\RepositoryCollectionInterface;
 use VitesseCms\Datagroup\Repositories\DatagroupRepository;
 use VitesseCms\Language\Repositories\LanguageRepository;
-use Phalcon\Di\DiInterface;
 
 class Module extends AbstractModule
 {
@@ -33,7 +35,7 @@ class Module extends AbstractModule
             new NewsletterRepository(),
             new NewsletterListRepository(),
             new NewsletterQueueRepository(),
-            new EmailRepository(),
+            new EmailRepository(Email::class),
             new ItemRepository()
         );
     }
