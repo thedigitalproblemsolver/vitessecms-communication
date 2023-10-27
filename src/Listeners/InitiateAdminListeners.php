@@ -10,6 +10,7 @@ use VitesseCms\Communication\Controllers\AdminnewsletterController;
 use VitesseCms\Communication\Controllers\AdminnewsletterlistController;
 use VitesseCms\Communication\Controllers\AdminnewsletterqueueController;
 use VitesseCms\Communication\Controllers\AdminnewslettertemplateController;
+use VitesseCms\Communication\Enums\EmailEnum;
 use VitesseCms\Communication\Enums\NewsletterListEnum;
 use VitesseCms\Communication\Listeners\Admin\AdminMenuListener;
 use VitesseCms\Communication\Listeners\Blocks\BlockNewsletterSubscribeListener;
@@ -18,7 +19,9 @@ use VitesseCms\Communication\Listeners\Controllers\AdminnewsletterControllerList
 use VitesseCms\Communication\Listeners\Controllers\AdminnewsletterlistControllerListener;
 use VitesseCms\Communication\Listeners\Controllers\AdminnewsletterqueueControllerListener;
 use VitesseCms\Communication\Listeners\Controllers\AdminnewsletterTemplateControllerListener;
+use VitesseCms\Communication\Listeners\Models\EmailListener;
 use VitesseCms\Communication\Listeners\Models\UserListener;
+use VitesseCms\Communication\Models\Email;
 use VitesseCms\Communication\Repositories\NewsletterListRepository;
 use VitesseCms\Communication\Repositories\NewsletterQueueRepository;
 use VitesseCms\Communication\Repositories\NewsletterRepository;
@@ -53,5 +56,6 @@ final class InitiateAdminListeners implements InitiateListenersInterface
             NewsletterListEnum::SERVICE_LISTENER->value,
             new NewsletterListListener(new NewsletterListRepository())
         );
+        $di->eventsManager->attach(EmailEnum::LISTENER->value, new EmailListener(Email::class));
     }
 }

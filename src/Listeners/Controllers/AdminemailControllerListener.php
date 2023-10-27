@@ -1,24 +1,24 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace VitesseCms\Communication\Listeners\Controllers;
 
-use VitesseCms\Admin\AbstractAdminController;
+use Phalcon\Events\Event;
 use VitesseCms\Admin\Forms\AdminlistFormInterface;
 use VitesseCms\Communication\Controllers\AdminemailController;
-use VitesseCms\Communication\Models\Email;
-use VitesseCms\User\Utils\PermissionUtils;
-use Phalcon\Events\Event;
-use Phalcon\Tag;
 
 class AdminemailControllerListener
 {
-    public function adminListItem(Event $event, AdminemailController $controller, Email $email): void
+    /*public function adminListItem(Event $event, AdminemailController $controller, Email $email): void
     {
-        $email->setAdminListExtra($controller->view->renderTemplate(
-            'emailAdminListItem',
-            $controller->configuration->getVendorNameDir() . 'communication/src/Resources/views/admin/',
-            ['email' => $email]
-        ));
+        $email->setAdminListExtra(
+            $controller->view->renderTemplate(
+                'emailAdminListItem',
+                $controller->configuration->getVendorNameDir() . 'communication/src/Resources/views/admin/',
+                ['email' => $email]
+            )
+        );
 
         if (PermissionUtils::check(
             $controller->user,
@@ -26,28 +26,21 @@ class AdminemailControllerListener
             'adminemail',
             'sendPreview'
         )) :
-            $email->setExtraAdminListButtons(Tag::linkTo([
-                'action' => '/Admin/communication/adminemail/sendPreview/' . $email->getId(),
-                'class' => 'fa fa-envelope',
-            ]));
+            $email->setExtraAdminListButtons(
+                Tag::linkTo([
+                    'action' => '/Admin/communication/adminemail/sendPreview/' . $email->getId(),
+                    'class' => 'fa fa-envelope',
+                ])
+            );
         endif;
-    }
+    }*/
 
-    public function adminListFilter(
-        Event $event,
-        AbstractAdminController $controller,
-        AdminlistFormInterface $form
-    ): string
+    public function adminListFilter(Event $event, AdminemailController $controller, AdminlistFormInterface $form): void
     {
         $form->addText(
             'Subject',
             'filter[subject.' . $form->configuration->getLanguageShort() . ']'
         );
         $form->addPublishedField($form);
-
-        return $form->renderForm(
-            $controller->getLink() . '/' . $controller->router->getActionName(),
-            'adminFilter'
-        );
     }
 }
