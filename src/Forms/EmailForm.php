@@ -75,7 +75,9 @@ class EmailForm extends AbstractForm implements AdminModelFormInterface
         )->addSubmitButton('%CORE_SAVE%');
         if ($this->entity !== null) {
             $this->addHtml(
-                '<a class="btn btn-outline-secondary" href="admin/communication/adminemail/sendPreview/' . $this->entity->getId(
+                '<a 
+                        href="' . $this->url->getBaseUri(
+                ) . 'admin/communication/adminemail/sendPreview/' . $this->entity->getId(
                 ) . '">Send preview&nbsp;<i class="fa fa-envelope"></i></a>'
             );
         }
