@@ -1,56 +1,36 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace VitesseCms\Communication\Services;
 
-use VitesseCms\Configuration\Services\ConfigService;
+use Phalcon\Incubator\Mailer\Manager;
+use Phalcon\Incubator\Mailer\Message;
 use VitesseCms\Content\Services\ContentService;
 use VitesseCms\Core\Services\ViewService;
 use VitesseCms\Core\Utils\FileUtil;
+use VitesseCms\Mustache\DTO\RenderTemplateDTO;
+use VitesseCms\Mustache\Enum\ViewEnum;
 use VitesseCms\Sef\Utils\UtmUtil;
 use VitesseCms\Setting\Services\SettingService;
-use Phalcon\Incubator\Mailer\Manager;
-use Phalcon\Incubator\Mailer\Message;
 
-class MailerService extends Manager
+final class MailerService
 {
-    /**
-     * @var SettingService
-     */
-    protected $setting;
-
-    /**
-     * @var ConfigService
-     */
-    protected $configuration;
-
-    /**
-     * @var ContentService
-     */
-    protected $content;
-
-    /**
-     * @var ViewService
-     */
-    protected $view;
+    private readonly Manager $mailManager;
 
     public function __construct(
-        SettingService $setting,
-        ConfigService $configuration,
-        ContentService $content,
-        ViewService $viewService
-    )
-    {
-        parent::__construct([
+        private readonly SettingService $setting,
+        private readonly ContentService $content,
+        private readonly ViewService $view,
+        private readonly \Phalcon\Events\Manager $eventsManager
+    ) {
+        $this->mailManager = new Manager([
             'driver' => 'sendmail',
             'from' => [
                 'email' => $setting->getString('WEBSITE_CONTACT_EMAIL'),
                 'name' => $setting->getString('WEBSITE_DEFAULT_NAME'),
             ],
         ]);
-        $this->setting = $setting;
-        $this->configuration = $configuration;
-        $this->content = $content;
-        $this->view = $viewService;
     }
 
     public function sendMail(
@@ -59,8 +39,7 @@ class MailerService extends Manager
         string $body,
         string $emailType = '',
         string $replyTo = ''
-    ): bool
-    {
+    ): bool {
         return (bool)$this->prepareMail(
             $toAddress,
             $subject,
@@ -76,9 +55,8 @@ class MailerService extends Manager
         string $body,
         string $emailType = '',
         string $replyTo = ''
-    ): Message
-    {
-        $mailMessage = $this->createMessage()
+    ): Message {
+        $mailMessage = $this->mailManager->createMessage()
             ->to($toAddress)
             ->subject($this->prepareString($subject))
             ->content($this->parseBody($body, $emailType));
@@ -98,40 +76,42 @@ class MailerService extends Manager
     protected function prepareString(string $content): string
     {
         preg_match_all('/{{([a-zA-Z_]*)}}/', $content, $aMatches);
-        if (is_array($aMatches) && isset($aMatches[1]) && is_array($aMatches[1])) :
-            foreach ($aMatches[1] as $key => $value) :
+        if (is_array($aMatches) && isset($aMatches[1]) && is_array($aMatches[1])) {
+            foreach ($aMatches[1] as $key => $value) {
                 $content = str_replace(
-                    ['http://{{' . $value . '}}', 'https://{{' . $value . '}}', '{{' . $value . '}}'],
+                    ['https://{{' . $value . '}}', 'https://{{' . $value . '}}', '{{' . $value . '}}'],
                     ['{{' . $value . '}}', '{{' . $value . '}}', $this->view->getVar($value)],
                     $content
                 );
-            endforeach;
-        endif;
+            }
+        }
 
         return $content;
     }
 
     protected function parseBody(string $body, string $emailType = ''): string
     {
-        $path = 'Template/core/Views/emails';
-        $template = 'core';
+        $template = 'default';
 
-        if (!empty($emailType)) :
+        if (!empty($emailType)) {
             $tmp = explode('/', $emailType);
             $tmp = array_reverse($tmp);
             $template = $tmp[0];
-            unset($tmp[0]);
-            $tmp = array_reverse($tmp);
-            $path = implode('/', $tmp);
-        endif;
+        }
 
-        return UtmUtil::append($this->content->parseContent(
-            $this->view->renderTemplate(
-                $template,
-                $this->configuration->getRootDir() . $path,
-                ['sendMailBody' => $this->prepareString($body)]
+        return UtmUtil::append(
+            $this->content->parseContent(
+                $this->eventsManager->fire(
+                    ViewEnum::RENDER_TEMPLATE_EVENT,
+                    new RenderTemplateDTO(
+                        'emails/' . $template,
+                        '',
+                        ['sendMailBody' => $this->prepareString($body)],
+                        true
+                    )
+                )
             )
-        ));
+        );
     }
 
     protected function embedImages(Message $message): void
@@ -140,17 +120,17 @@ class MailerService extends Manager
         $search = $replace = [];
 
         preg_match_all('@src="([^"]+)"@', $content, $imageUrls);
-        if (is_array($imageUrls) && isset($imageUrls[1]) && is_array($imageUrls[1])) :
-            foreach ($imageUrls[1] as $imageUrl) :
+        if (is_array($imageUrls) && isset($imageUrls[1]) && is_array($imageUrls[1])) {
+            foreach ($imageUrls[1] as $imageUrl) {
                 $localFile = FileUtil::urlToLocalMapper($imageUrl);
-                if (is_file($localFile)):
+                if (is_file($localFile)) {
                     $cid = $message->embed($localFile);
                     $search[] = $imageUrl;
                     $replace[] = $cid;
-                endif;
-            endforeach;
+                }
+            }
 
             $message->content(str_replace($search, $replace, $content));
-        endif;
+        }
     }
 }

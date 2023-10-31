@@ -42,8 +42,7 @@ final class AdminemailController extends AbstractControllerAdmin implements
     {
         return $this->emailRepository->findAll($findValueIterator, false);
     }
-
-
+    
     public function onConstruct()
     {
         parent::onConstruct();
