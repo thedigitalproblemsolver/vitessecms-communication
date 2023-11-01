@@ -6,6 +6,7 @@ namespace VitesseCms\Communication\Services;
 
 use Phalcon\Incubator\Mailer\Manager;
 use Phalcon\Incubator\Mailer\Message;
+use VitesseCms\Communication\External\Html2text;
 use VitesseCms\Content\Services\ContentService;
 use VitesseCms\Core\Services\ViewService;
 use VitesseCms\Core\Utils\FileUtil;
@@ -56,10 +57,13 @@ final class MailerService
         string $emailType = '',
         string $replyTo = ''
     ): Message {
+        $parsedBody = $this->parseBody($body, $emailType);
+
         $mailMessage = $this->mailManager->createMessage()
             ->to($toAddress)
             ->subject($this->prepareString($subject))
-            ->content($this->parseBody($body, $emailType));
+            ->content($parsedBody)
+            ->content((new Html2text($parsedBody))->get_text(), Message::CONTENT_TYPE_PLAIN);
         if ($this->setting->has('WEBSITE_CATCHALL_EMAIL')) :
             $mailMessage->bcc($this->setting->get('WEBSITE_CATCHALL_EMAIL'));
         endif;
@@ -71,22 +75,6 @@ final class MailerService
         $this->embedImages($mailMessage);
 
         return $mailMessage;
-    }
-
-    protected function prepareString(string $content): string
-    {
-        preg_match_all('/{{([a-zA-Z_]*)}}/', $content, $aMatches);
-        if (is_array($aMatches) && isset($aMatches[1]) && is_array($aMatches[1])) {
-            foreach ($aMatches[1] as $key => $value) {
-                $content = str_replace(
-                    ['https://{{' . $value . '}}', 'https://{{' . $value . '}}', '{{' . $value . '}}'],
-                    ['{{' . $value . '}}', '{{' . $value . '}}', $this->view->getVar($value)],
-                    $content
-                );
-            }
-        }
-
-        return $content;
     }
 
     protected function parseBody(string $body, string $emailType = ''): string
@@ -112,6 +100,22 @@ final class MailerService
                 )
             )
         );
+    }
+
+    protected function prepareString(string $content): string
+    {
+        preg_match_all('/{{([a-zA-Z_]*)}}/', $content, $aMatches);
+        if (is_array($aMatches) && isset($aMatches[1]) && is_array($aMatches[1])) {
+            foreach ($aMatches[1] as $key => $value) {
+                $content = str_replace(
+                    ['https://{{' . $value . '}}', 'https://{{' . $value . '}}', '{{' . $value . '}}'],
+                    ['{{' . $value . '}}', '{{' . $value . '}}', $this->view->getVar($value)],
+                    $content
+                );
+            }
+        }
+
+        return $content;
     }
 
     protected function embedImages(Message $message): void
