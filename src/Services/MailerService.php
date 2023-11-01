@@ -63,7 +63,7 @@ final class MailerService
             ->to($toAddress)
             ->subject($this->prepareString($subject))
             ->content($parsedBody)
-            ->content((new Html2text($parsedBody))->get_text(), Message::CONTENT_TYPE_PLAIN);
+            ->contentAlternative((new Html2text($parsedBody))->get_text(), Message::CONTENT_TYPE_PLAIN);
         if ($this->setting->has('WEBSITE_CATCHALL_EMAIL')) :
             $mailMessage->bcc($this->setting->get('WEBSITE_CATCHALL_EMAIL'));
         endif;
