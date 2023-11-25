@@ -1,22 +1,23 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace VitesseCms\Communication\Controllers;
 
+use stdClass;
+use VitesseCms\Admin\AbstractAdminController;
 use VitesseCms\Communication\Forms\NewsletterListForm;
 use VitesseCms\Communication\Forms\NewsletterListImportForm;
 use VitesseCms\Communication\Helpers\ExportHelper;
-use VitesseCms\Communication\Repositories\RepositoriesInterface;
-use VitesseCms\Communication\Repositories\RepositoryInterface;
 use VitesseCms\Communication\Models\NewsletterList;
-use VitesseCms\Admin\AbstractAdminController;
-use VitesseCms\Communication\Repositories\RepositoryCollection;
-use VitesseCms\Datafield\Repositories\DatafieldRepository;
-use VitesseCms\Datagroup\Repositories\DatagroupRepository;
-use VitesseCms\Database\AbstractCollection;
+use VitesseCms\Communication\Repositories\RepositoriesInterface;
+use VitesseCms\Content\Enum\ItemEnum;
 use VitesseCms\Core\Utils\FileUtil;
-use VitesseCms\Export\Repositories\ExportTypeRepository;
-use VitesseCms\Content\Repositories\ItemRepository;
-use VitesseCms\Language\Repositories\LanguageRepository;
+use VitesseCms\Datafield\Enum\DatafieldEnum;
+use VitesseCms\Datagroup\Enums\DatagroupEnum;
+use VitesseCms\Export\Enums\ExportTypeEnums;
+use VitesseCms\Export\Repositories\RepositoryCollection;
+use VitesseCms\Language\Enums\LanguageEnum;
 
 class AdminnewsletterlistController extends AbstractAdminController implements RepositoriesInterface
 {
@@ -44,13 +45,15 @@ class AdminnewsletterlistController extends AbstractAdminController implements R
 
     public function exportAction(string $newsletterListId): void
     {
-        $exportHelper = new ExportHelper($this->configuration->getLanguage(), new \VitesseCms\Export\Repositories\RepositoryCollection(
-            new ExportTypeRepository(),
-            new ItemRepository(),
-            new LanguageRepository(),
-            new DatagroupRepository(),
-            new DatafieldRepository()
-        ));
+        $exportHelper = new ExportHelper(
+            $this->configuration->getLanguage(), new RepositoryCollection(
+                $this->eventsManager->fire(ExportTypeEnums::GET_REPOSITORY->value, new stdClass()),
+                $this->eventsManager->fire(ItemEnum::GET_REPOSITORY, new stdClass()),
+                $this->eventsManager->fire(LanguageEnum::GET_REPOSITORY->value, new stdClass()),
+                $this->eventsManager->fire(DatagroupEnum::GET_REPOSITORY->value, new stdClass()),
+                $this->eventsManager->fire(DatafieldEnum::GET_REPOSITORY->value, new stdClass())
+            )
+        );
         $exportHelper->setItems([$this->repositories->newsletterList->getById($newsletterListId)]);
         $exportHelper->setFields(['members', 'subscribed', 'GdprEmail']);
         $exportHelper->setHeaders();
@@ -60,75 +63,75 @@ class AdminnewsletterlistController extends AbstractAdminController implements R
 
     public function parseImportFormAction(): void
     {
-        if ($this->request->get('newsletterlist') && $this->request->hasFiles()) :
-            foreach ($this->request->getUploadedFiles() as $file) :
+        if ($this->request->get('newsletterlist') && $this->request->hasFiles()) {
+            foreach ($this->request->getUploadedFiles() as $file) {
                 $name = FileUtil::sanatize($file->getName());
-                if ($file->moveTo($this->config->get('uploadDir') . $name)) :
-                    if (($handle = fopen($this->config->get('uploadDir') . $name, 'rb')) !== false) :
-                        $newsletterList = $this->repositories->newsletterList->getById($this->request->get('newsletterlist'));
-                        while (($data = fgetcsv($handle, 1000, ',')) !== false) :
+                if ($file->moveTo($this->config->get('uploadDir') . $name)) {
+                    if (($handle = fopen($this->config->get('uploadDir') . $name, 'rb')) !== false) {
+                        $newsletterList = $this->repositories->newsletterList->getById(
+                            $this->request->get('newsletterlist')
+                        );
+                        while (($data = fgetcsv($handle, 1000, ',')) !== false) {
                             $newsletterList->addMember($data[0]);
-                        endwhile;
+                        }
                         $newsletterList->save();
-                    endif;
+                    }
                     $this->flash->setSucces('ADMIN_FILE_UPLOAD_SUCCESS', [$file->getName()]);
-                else :
+                } else {
                     $this->flash->setError('ADMIN_FILE_UPLOAD_FAILED', [$file->getName()]);
-                endif;
-            endforeach;
+                }
+            }
 
             $this->redirect(
                 $this->url->getBaseUri() .
                 'admin/communication/adminnewsletterlist/edit/' .
                 $this->request->get('newsletterlist')
             );
-        endif;
+        }
 
         $this->redirect();
     }
 
     public function deleteMemberAction(string $id, int $key): void
     {
-        if ($id && is_numeric($key)) :
+        if (!empty($id)) {
             $newsletterList = $this->repositories->newsletterList->getById($id, false);
             $members = $newsletterList->getMembers();
-            if (isset($members[$key])) :
+            if (isset($members[$key])) {
                 $newsletterList->removeMember($members[$key]['email'])->save();
-            endif;
+            }
             $this->flash->setSucces('Member is removed');
-        endif;
+        }
 
         $this->redirect();
     }
 
     public function unsubscribeMemberAction(string $id, int $key): void
     {
-        if ($id && is_numeric($key)) :
+        if (!empty($id)) {
             $newsletterList = $this->repositories->newsletterList->getById($id, false);
             $members = $newsletterList->getMembers();
-            if (isset($members[$key])) :
+            if (isset($members[$key])) {
                 $newsletterList = $newsletterList->unsubscribeMember($members[$key]['email']);
-            endif;
+            }
             $newsletterList->save();
             $this->flash->setSucces('Member is unsubscribed');
-
-        endif;
+        }
 
         $this->redirect();
     }
 
     public function subscribeMemberAction(string $id, int $key): void
     {
-        if ($id && is_numeric($key)) :
+        if (!empty($id)) {
             $newsletterList = $this->repositories->newsletterList->getById($id, false);
             $members = $newsletterList->getMembers();
-            if (isset($members[$key])) :
+            if (isset($members[$key])) {
                 $newsletterList = $newsletterList->subscribeMember($members[$key]['email']);
-            endif;
+            }
             $newsletterList->save();
             $this->flash->setSucces('Member is subscribed');
-
-        endif;
+        }
 
         $this->redirect();
     }

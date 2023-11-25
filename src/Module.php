@@ -16,6 +16,7 @@ use VitesseCms\Content\Repositories\ItemRepository;
 use VitesseCms\Core\AbstractModule;
 use VitesseCms\Core\Interfaces\RepositoryCollectionInterface;
 use VitesseCms\Datagroup\Repositories\DatagroupRepository;
+use VitesseCms\Language\Models\Language;
 use VitesseCms\Language\Repositories\LanguageRepository;
 
 class Module extends AbstractModule
@@ -30,7 +31,7 @@ class Module extends AbstractModule
     {
         return new RepositoryCollection(
             new NewsletterTemplateRepository(),
-            new LanguageRepository(),
+            new LanguageRepository(Language::class),
             new DatagroupRepository(),
             new NewsletterRepository(),
             new NewsletterListRepository(),
