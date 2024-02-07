@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace VitesseCms\Communication\Listeners;
@@ -20,23 +21,26 @@ use VitesseCms\Form\Enums\FormEnum;
 
 final class InitiateListeners implements InitiateListenersInterface
 {
-    public static function setListeners(InjectableInterface $di): void
+    public static function setListeners(InjectableInterface $injectable): void
     {
-        if ($di->user->hasAdminAccess()):
-            $di->eventsManager->attach('adminMenu', new AdminMenuListener());
+        if ($injectable->user->hasAdminAccess()):
+            $injectable->eventsManager->attach('adminMenu', new AdminMenuListener());
         endif;
-        $di->eventsManager->attach(
+        $injectable->eventsManager->attach(
             MailchimpInitialize::class,
-            new BlockMailchimpInitializeListener($di->request, $di->session)
+            new BlockMailchimpInitializeListener($injectable->request, $injectable->session)
         );
-        $di->eventsManager->attach('contentTag', new TagUnsubscribeListener());
-        $di->eventsManager->attach('contentTag', new TagSubscribeListener());
-        $di->eventsManager->attach(FormEnum::SERVICE_LISTENER->value, new FormListener(new NewsletterRepository()));
-        $di->eventsManager->attach(
+        $injectable->eventsManager->attach('contentTag', new TagUnsubscribeListener());
+        $injectable->eventsManager->attach('contentTag', new TagSubscribeListener());
+        $injectable->eventsManager->attach(
+            FormEnum::SERVICE_LISTENER->value,
+            new FormListener(new NewsletterRepository())
+        );
+        $injectable->eventsManager->attach(
             NewsletterListEnum::SERVICE_LISTENER->value,
             new NewsletterListListener(new NewsletterListRepository())
         );
-        $di->eventsManager->attach(
+        $injectable->eventsManager->attach(
             NewsletterQueueEnum::SERVICE_LISTENER->value,
             new NewsletterQueueListener(new NewsletterQueueRepository())
         );

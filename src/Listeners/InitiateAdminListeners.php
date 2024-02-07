@@ -31,31 +31,37 @@ use VitesseCms\User\Models\User;
 
 final class InitiateAdminListeners implements InitiateListenersInterface
 {
-    public static function setListeners(InjectableInterface $di): void
+    public static function setListeners(InjectableInterface $injectable): void
     {
-        $di->eventsManager->attach('adminMenu', new AdminMenuListener());
-        $di->eventsManager->attach(AdminnewsletterController::class, new AdminnewsletterControllerListener());
-        $di->eventsManager->attach(AdminnewsletterqueueController::class, new AdminnewsletterqueueControllerListener());
-        $di->eventsManager->attach(AdminnewsletterlistController::class, new AdminnewsletterlistControllerListener());
-        $di->eventsManager->attach(AdminemailController::class, new AdminemailControllerListener());
-        $di->eventsManager->attach(
+        $injectable->eventsManager->attach('adminMenu', new AdminMenuListener());
+        $injectable->eventsManager->attach(AdminnewsletterController::class, new AdminnewsletterControllerListener());
+        $injectable->eventsManager->attach(
+            AdminnewsletterqueueController::class,
+            new AdminnewsletterqueueControllerListener()
+        );
+        $injectable->eventsManager->attach(
+            AdminnewsletterlistController::class,
+            new AdminnewsletterlistControllerListener()
+        );
+        $injectable->eventsManager->attach(AdminemailController::class, new AdminemailControllerListener());
+        $injectable->eventsManager->attach(
             AdminnewslettertemplateController::class,
             new AdminnewsletterTemplateControllerListener()
         );
-        $di->eventsManager->attach(
+        $injectable->eventsManager->attach(
             NewsletterSubscribe::class,
             new BlockNewsletterSubscribeListener(
                 new NewsletterRepository()
             )
         );
-        $di->eventsManager->attach(
+        $injectable->eventsManager->attach(
             User::class,
-            new UserListener($di->log, new NewsletterListRepository(), new NewsletterQueueRepository())
+            new UserListener($injectable->log, new NewsletterListRepository(), new NewsletterQueueRepository())
         );
-        $di->eventsManager->attach(
+        $injectable->eventsManager->attach(
             NewsletterListEnum::SERVICE_LISTENER->value,
             new NewsletterListListener(new NewsletterListRepository())
         );
-        $di->eventsManager->attach(EmailEnum::LISTENER->value, new EmailListener(Email::class));
+        $injectable->eventsManager->attach(EmailEnum::LISTENER->value, new EmailListener(Email::class));
     }
 }
